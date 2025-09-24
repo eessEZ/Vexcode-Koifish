@@ -44,10 +44,10 @@ ZERO_TRACKER_NO_ODOM,
 //You will input whatever motor names you chose when you configured your robot using the sidebar configurer, they don't have to be "Motor1" and "Motor2".
 
 //Left Motors:
-motor_group(left_front,left_middle,left_back),
+motor_group(),
 
 //Right Motors:
-motor_group(right_front,right_middle,right_back),
+motor_group(),
 
 //Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e. "PORT1", not simply "1"):
 PORT1,
@@ -58,7 +58,7 @@ PORT1,
 //External ratio, must be in decimal, in the format of input teeth/output teeth.
 //If your motor has an 84-tooth gear and your wheel has a 60-tooth gear, this value will be 1.4.
 //If the motor drives the wheel directly, this value is 1:
-0.75,
+0.6,
 
 //Gyro scale, this is what your gyro reads when you spin the robot 360 degrees.
 //For most cases 360 will do fine here, but this scale factor can be very helpful when precision is necessary.
@@ -114,10 +114,7 @@ bool auto_started = false;
  * may need, like resetting pneumatic components. You can rename these autons to
  * be more descriptive, if you like.
  */
-void reduceSpeed()
-{
-  chassis.setVelocity(50,pct);
-}
+
 void pre_auton() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
@@ -203,10 +200,7 @@ void autonomous(void) {
       break;
  }
 }
-void increaseSpeed()
-{
-  chassis.setVelocity(100,pct);
-}
+
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
 /*                              User Control Task                            */
@@ -219,80 +213,22 @@ void increaseSpeed()
 
 void usercontrol(void) {
   // User control code here, inside the loop
+  while (1) {
+    // This is the main execution loop for the user control program.
+    // Each time through the loop your program should update motor + servo
+    // values based on feedback from the joysticks.
 
-  // Set stopping mode
-  void setStoppingModes() {
-    left_front.setStopping(coast);
-    left_middle.setStopping(coast);
-    left_back.setStopping(coast);
-    right_front.setStopping(coast);
-    right_middle.setStopping(coast);
-    right_back.setStopping(coast);
-    intake1.setStopping(coast);
-    intake2.setStopping(coast);
-  }
+    // ........................................................................
+    // Insert user code here. This is where you use the joystick values to
+    // update your motors, etc.
+    // ........................................................................
 
-  // === Deadzone Function ===
-  int apply_deadzone(int value, int threshold = 5) {
-    return (abs(value) < threshold) ? 0 : value;
-  }
+    //Replace this line with chassis.control_tank(); for tank drive 
+    //or chassis.control_holonomic(); for holo drive.
+    chassis.control_arcade();
 
-  int main() {
-    // initialize robot configuration
-    vexcodeInit();
-    setStoppingModes();
-
-    bool is_tank_drive = false;
-    bool prev_toggle_combo = false;
-
-    int drive_speed = 100;  // default speed
-    bool prev_speed_toggle = false;
-
-    while (true) {
-      // === Intake Control (R2 = forward, R1 = reverse) ===
-      if (Controller1.ButtonR1.pressing()) {
-        intake1.spin(forward, 100, percent);
-        intake2.spin(forward, 100, percent);
-      } else if (Controller1.ButtonR2.pressing()) {
-        intake1.spin(reverse, 100, percent);
-        intake2.spin(reverse, 100, percent);
-      } else {
-        intake1.stop();
-        intake2.stop();
-      }
-
-      // === Drive mode toggle (Button Y + Right) ===
-      bool toggle_combo = Controller1.ButtonY.pressing() && Controller1.ButtonRight.pressing();
-      if (toggle_combo && !prev_toggle_combo) {
-        is_tank_drive = !is_tank_drive;
-        Brain.Screen.clearScreen();
-        Brain.Screen.print("Drive Mode: %s", is_tank_drive ? "Tank" : "Arcade");
-      }
-      prev_toggle_combo = toggle_combo;
-
-      // === Speed toggle (Button L2) ===
-      Controller1.ButtonL2.pressed(reduceSpeed);
-      Controller1.ButtorL1.pressed(increaseSpeed);
-
-      // === Drive Control ===
-      int left_speed, right_speed;
-      if (is_tank_drive) {
-        // Tank drive: Axis3 = left, Axis2 = right
-        //left_speed  = apply_deadzone(Controller1.Axis3.position()) * drive_speed / 100;
-        //right_speed = apply_deadzone(Controller1.Axis2.position()) * drive_speed / 100;
-        chassis.control_tank()
-      } else {
-        // Arcade drive: Axis3 = forward/back, Axis1 = turn
-        //int forward = apply_deadzone(Controller1.Axis3.position());
-        //int turn    = apply_deadzone(Controller1.Axis1.position());
-        //left_speed  = (forward + turn) * drive_speed / 100;
-        //right_speed = (forward - turn) * drive_speed / 100;
-        chassis.control_arcade()
-      }
-
-
-      vex::task::sleep(20);
-    }
+    wait(20, msec); // Sleep the task for a short amount of time to
+                    // prevent wasted resources.
   }
 }
 
