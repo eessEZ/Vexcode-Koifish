@@ -1,0 +1,42 @@
+#include "vex.h"
+
+using namespace vex;
+using signature = vision::signature;
+using code = vision::code;
+
+// A global instance of brain used for printing to the V5 Brain screen.
+brain  Brain;
+
+// Controller (primary)
+controller Controller1 = controller(primary);
+
+// Drive motors (matching koifish.v5python)
+motor LeftFront = motor(PORT1, ratio6_1, true);
+motor LeftMiddle = motor(PORT2, ratio6_1, true);
+motor LeftBack = motor(PORT11, ratio6_1, true);
+
+motor RightFront = motor(PORT9, ratio6_1, false);
+motor RightMiddle = motor(PORT10, ratio6_1, false);
+motor RightBack = motor(PORT20, ratio6_1, false);
+
+// Intake motors
+motor Intake1 = motor(PORT7, ratio6_1, false);
+motor Intake2 = motor(PORT8, ratio6_1, false);
+
+// Inertial sensor
+inertial InertialSensor = inertial(PORT16);
+
+// Note: Python config used a three-wire solenoid on the brain triport. That
+// specific three-wire digital out is not directly modeled here; remove C++ digital_out.
+
+void vexcodeInit( void ) {
+  // Set stopping modes to COAST for drive and intake, matching Python setup
+  LeftFront.setStopping(coast);
+  LeftMiddle.setStopping(coast);
+  LeftBack.setStopping(coast);
+  RightFront.setStopping(coast);
+  RightMiddle.setStopping(coast);
+  RightBack.setStopping(coast);
+  Intake1.setStopping(coast);
+  Intake2.setStopping(coast);
+}
