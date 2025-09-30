@@ -58,7 +58,7 @@ PORT16,
 //External ratio, must be in decimal, in the format of input teeth/output teeth.
 //If your motor has an 84-tooth gear and your wheel has a 60-tooth gear, this value will be 1.4.
 //If the motor drives the wheel directly, this value is 1:
-0.6,
+0.75,
 
 //Gyro scale, this is what your gyro reads when you spin the robot 360 degrees.
 //For most cases 360 will do fine here, but this scale factor can be very helpful when precision is necessary.
@@ -105,16 +105,18 @@ PORT3,     -PORT4,
 
 );
 
-int current_auton_selection = 0;
+int current_auton_selection =2;
 bool auto_started = false;
 // Driver state mirrored from Python config
-bool is_tank_drive = false;
+bool is_tank_drive = true; // Set tank drive as default
+bool is_reverse_arcade = false;
 int drive_speed = 100;
 bool pneumatics_extended = false; // placeholder, no direct solenoid mapped
 
 bool prev_toggle_combo = false;
 bool prev_speed_toggle = false;
 bool prev_pneumatics_press = false;
+bool prev_reverse_arcade_combo = false;
 
 /**
  * Function before autonomous. It prints the current auton number on the screen
@@ -181,38 +183,224 @@ void pre_auton() {
 
 void autonomous(void) {
   auto_started = true;
+  
+  // Set drive motors to HOLD mode for precise autonomous movements
+  LeftFront.setStopping(hold);
+  LeftMiddle.setStopping(hold);
+  LeftBack.setStopping(hold);
+  RightFront.setStopping(hold);
+  RightMiddle.setStopping(hold);
+  RightBack.setStopping(hold);
+  
   switch(current_auton_selection){ 
     case 0: {
       // Ported Python-style autonomous
       // intake1_forward_only()
+
+      // drive_pid(38) -> approximate with chassis.drive_distance(38)
+      chassis.drive_distance(13);
       Intake1.spin(fwd, 100, pct);
       Intake2.stop();
       Intake2.setStopping(hold);
-
-      // drive_pid(38) -> approximate with chassis.drive_distance(38)
-      chassis.drive_distance(38);
-      wait(1, sec);
-      // intake_stop()
+      chassis.turn_to_angle(25);
+      // Second drive_distance(13) at 40% speed
+      chassis.set_drive_constants(4, 1.0, 0.5, 6, 0);
+      chassis.drive_distance(16);
+      chassis.set_drive_constants(8, 1.0, 0.5, 6, 0);
+      wait(0.5, sec);
+      // Restore normal speed for turns
       Intake1.stop();
       Intake2.stop();
+      chassis.turn_to_angle(0);
 
-      chassis.drive_distance(-20);
+      chassis.drive_distance(-22);
       chassis.turn_to_angle(90);
-      chassis.drive_distance(20);
+      chassis.drive_distance(27);
       chassis.turn_to_angle(180);
       chassis.drive_distance(-18);
-      // intake forward for 3 seconds
+      chassis.turn_to_angle(180);
+      // intake forward for 2 seconds
       Intake1.spin(fwd, 100, pct);
       Intake2.spin(fwd, 100, pct);
-      wait(3, sec);
+      wait(1.5, sec);
       Intake1.stop();
       Intake2.stop();
+      Intake2.setStopping(hold);
+      
+      // Activate pneumatics
+      Solenoid.set(true);
+      pneumatics_extended = true;
+      Intake1.spin(fwd, 100, pct);
+      //drive to the matchload at 50% speed
+      chassis.set_drive_constants(4, 1, 0.5, 6, 0);
+      chassis.drive_distance(30);
+      chassis.turn_to_angle(180);
+      chassis.set_drive_constants(8, 1, 0.5, 6, 0);
+      // Restore normal speed
+      wait(0.4,sec);
+      Intake1.stop();
+      //drive back
+      chassis.drive_distance(-30);
+      // Deactivate pneumatics
+      Solenoid.set(false);
+      pneumatics_extended = false;
+      Intake1.spin(fwd, 100, pct);
+      Intake2.spin(fwd, 100, pct);
+      wait(1.5,sec);
+      chassis.drive_distance(10);
+      
+      chassis.drive_distance(-10);
+      
+      chassis.drive_distance(5);
+
     } break;
-    case 1:         
-      drive_test();
-      break;
+    case 1:{   
+      
+        
+      // Ported Python-style autonomous
+      // intake1_forward_only()
+
+      // drive_pid(38) -> approximate with chassis.drive_distance(38)
+      chassis.drive_distance(13);
+      Intake1.spin(fwd, 100, pct);
+      Intake2.stop();
+      Intake2.setStopping(hold);
+      chassis.turn_to_angle(-25);
+      // Second drive_distance(13) at 40% speed
+      chassis.set_drive_constants(4, 1.0, 0.5, 5, 0);
+      chassis.drive_distance(16);
+      chassis.set_drive_constants(8, 1, 0.5, 5, 0);
+      wait(0.4, sec);
+      // Restore normal speed for turns
+      Intake1.stop();
+      Intake2.stop();
+      chassis.turn_to_angle(0);
+
+      chassis.drive_distance(-22);
+      chassis.turn_to_angle(-90);
+      chassis.drive_distance(27);
+      chassis.turn_to_angle(180);
+      chassis.drive_distance(-16);
+      chassis.turn_to_angle(180);
+      // intake forward for 2 seconds
+      Intake1.spin(fwd, 100, pct);
+      Intake2.spin(fwd, 100, pct);
+      wait(1.5, sec);
+      Intake1.stop();
+      Intake2.stop();
+      Intake2.setStopping(hold);
+      
+      // Activate pneumatics
+      Solenoid.set(true);
+      pneumatics_extended = true;
+      Intake1.spin(fwd, 100, pct);
+      //drive to the matchload at 50% speed
+      chassis.set_drive_constants(4, 1, 0.5, 5, 0);
+      chassis.drive_distance(30);
+      chassis.turn_to_angle(180);
+      chassis.set_drive_constants(8, 1, 0.5, 5, 0);
+      // Restore normal speed
+      wait(1,sec);
+      Intake1.stop();
+      //drive back
+      chassis.drive_distance(-30);
+      // Deactivate pneumatics
+      Solenoid.set(false);
+      pneumatics_extended = false;
+      Intake1.spin(fwd, 100, pct);
+      Intake2.spin(fwd, 100, pct);
+      wait(1.5,sec);
+      chassis.drive_distance(10);
+      
+      chassis.drive_distance(-10);
+      
+      chassis.drive_distance(5);
+
+         
+
+    }break;
+
+
+
     case 2:
-      turn_test();
+      {
+        
+      // Ported Python-style autonomous
+      // intake1_forward_only()
+
+      // drive_pid(38) -> approximate with chassis.drive_distance(38)
+      chassis.drive_distance(13);
+      Intake1.spin(fwd, 100, pct);
+      Intake2.stop();
+      Intake2.setStopping(hold);
+      chassis.turn_to_angle(-25);
+      // Second drive_distance(13) at 40% speed
+      chassis.set_drive_constants(4, 1.0, 0.5, 6, 0);
+      chassis.drive_distance(16);
+      
+      chassis.set_drive_constants(8, 1, 0.5, 6, 0);
+      wait(0.4, sec);
+      // Restore normal speed for turns
+      Intake1.stop();
+      Intake2.stop();
+      chassis.turn_to_angle(0);
+      chassis.drive_max_voltage = 6;
+      chassis.turn_max_voltage = 8;
+      chassis.drive_distance(-22);
+      chassis.turn_to_angle(-90);
+      chassis.drive_distance(26);
+      chassis.turn_to_angle(180);
+      vex::task deploy1([]{
+        vex::wait(900, msec);
+        Intake1.spin(fwd, 100, pct);
+        Intake2.spin(fwd, 100, pct);
+        wait(0.4, sec);
+        return 0;
+      });
+      
+      chassis.drive_distance(-18);
+      chassis.turn_to_angle(180);
+      // intake forward for 2 seconds
+      
+      Intake1.stop();
+      Intake2.stop();
+      Intake2.setStopping(hold);
+      
+      // Activate pneumatics
+      Solenoid.set(true);
+      pneumatics_extended = true;
+      Intake1.spin(fwd, 100, pct);
+      //drive to the matchload at 50% speed
+      chassis.set_turn_exit_conditions(1.0, 50, 900);
+      chassis.turn_to_angle(178);
+      chassis.set_drive_exit_conditions(1.0, 50, 2000);
+      chassis.drive_distance(32);
+      
+      
+      chassis.set_drive_constants(8, 1, 0.5, 6, 0);
+      // Restore normal speed
+      wait(0.4,sec);
+      Intake1.stop();
+      //drive back
+      vex::task deploy2([]{
+        vex::wait(1200, msec);
+        Intake1.spin(fwd, 100, pct);
+        Intake2.spin(fwd, 100, pct);
+        wait(0.4, sec);
+        return 0;
+      });
+      chassis.drive_distance(-32);
+      // Deactivate pneumatics
+      Solenoid.set(false);
+      pneumatics_extended = false;
+      
+      chassis.drive_distance(10);
+      
+      chassis.drive_distance(-10);
+      
+      chassis.drive_distance(5);
+
+      }
       break;
     case 3:
       swing_test();
@@ -243,6 +431,14 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
+  // Set drive motors back to COAST mode for smooth user control
+  LeftFront.setStopping(coast);
+  LeftMiddle.setStopping(coast);
+  LeftBack.setStopping(coast);
+  RightFront.setStopping(coast);
+  RightMiddle.setStopping(coast);
+  RightBack.setStopping(coast);
+  
   // User control code here, inside the loop
   while (1) {
     // This is the main execution loop for the user control program.
@@ -278,10 +474,21 @@ void usercontrol(void) {
     bool toggle_combo = Controller1.ButtonY.pressing() && Controller1.ButtonRight.pressing();
     if (toggle_combo && !prev_toggle_combo){
       is_tank_drive = !is_tank_drive;
-  Brain.Screen.clearScreen();
-  if (is_tank_drive) Brain.Screen.print("Drive Mode: Tank"); else Brain.Screen.print("Drive Mode: Arcade");
+      is_reverse_arcade = false; // Reset reverse arcade when switching modes
+      Brain.Screen.clearScreen();
+      if (is_tank_drive) Brain.Screen.print("Drive Mode: Tank"); else Brain.Screen.print("Drive Mode: Arcade");
     }
     prev_toggle_combo = toggle_combo;
+
+    // === Reverse Arcade Toggle (Up + X) ===
+    bool reverse_arcade_combo = Controller1.ButtonUp.pressing() && Controller1.ButtonX.pressing();
+    if (reverse_arcade_combo && !prev_reverse_arcade_combo){
+      is_reverse_arcade = !is_reverse_arcade;
+      is_tank_drive = false; // Switch to arcade mode when enabling reverse arcade
+      Brain.Screen.clearScreen();
+      if (is_reverse_arcade) Brain.Screen.print("Drive Mode: Reverse Arcade"); else Brain.Screen.print("Drive Mode: Arcade");
+    }
+    prev_reverse_arcade_combo = reverse_arcade_combo;
 
     // === Speed Toggle (B) ===
     bool curr_speed_toggle = Controller1.ButtonB.pressing();
@@ -300,7 +507,14 @@ void usercontrol(void) {
     if (is_tank_drive){
       left_speed = (int)(deadband(Controller1.Axis3.position(), 5) * drive_speed / 100.0);
       right_speed = (int)(deadband(Controller1.Axis2.position(), 5) * drive_speed / 100.0);
+    } else if (is_reverse_arcade) {
+      // Reverse arcade: Axis4 (left/right) for left/right, Axis2 (left/right) for forward/back
+      int fwd = (int)deadband(Controller1.Axis2.position(), 5);
+      int turn = (int)deadband(Controller1.Axis4.position(), 5);
+      left_speed = (int)((fwd + turn) * drive_speed / 100.0);
+      right_speed = (int)((fwd - turn) * drive_speed / 100.0);
     } else {
+      // Normal arcade: Axis3 (forward/back) for forward/back, Axis1 (left/right) for left/right
       int fwd = (int)deadband(Controller1.Axis3.position(), 5);
       int turn = (int)deadband(Controller1.Axis1.position(), 5);
       left_speed = (int)((fwd + turn) * drive_speed / 100.0);
@@ -315,10 +529,10 @@ void usercontrol(void) {
     // === Pneumatics toggle (L2) ===
     bool pneu_press = Controller1.ButtonL2.pressing();
     if (pneu_press && !prev_pneumatics_press){
-      // Placeholder: toggle state and print. Wire to solenoid if you add one.
       pneumatics_extended = !pneumatics_extended;
-  Brain.Screen.clearScreen();
-  if (pneumatics_extended) Brain.Screen.print("Pneumatics: Extended"); else Brain.Screen.print("Pneumatics: Retracted");
+      Solenoid.set(pneumatics_extended);
+      Brain.Screen.clearScreen();
+      if (pneumatics_extended) Brain.Screen.print("Pneumatics: Extended"); else Brain.Screen.print("Pneumatics: Retracted");
     }
     prev_pneumatics_press = pneu_press;
 

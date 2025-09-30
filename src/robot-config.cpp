@@ -26,8 +26,8 @@ motor Intake2 = motor(PORT8, ratio6_1, false);
 // Inertial sensor
 inertial InertialSensor = inertial(PORT16);
 
-// Note: Python config used a three-wire solenoid on the brain triport. That
-// specific three-wire digital out is not directly modeled here; remove C++ digital_out.
+// Pneumatics - solenoid on brain three-wire port H
+digital_out Solenoid = digital_out(Brain.ThreeWirePort.H);
 
 void vexcodeInit( void ) {
   // Set stopping modes to COAST for drive and intake, matching Python setup

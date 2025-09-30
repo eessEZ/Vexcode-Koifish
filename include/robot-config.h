@@ -24,4 +24,7 @@ extern motor Intake2;
 // Inertial sensor
 extern inertial InertialSensor;
 
+// Pneumatics
+extern digital_out Solenoid;
+
 void  vexcodeInit( void );
