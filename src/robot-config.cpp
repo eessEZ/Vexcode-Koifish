@@ -28,6 +28,8 @@ inertial InertialSensor = inertial(PORT16);
 
 // Pneumatics - solenoid on brain three-wire port H
 digital_out Solenoid = digital_out(Brain.ThreeWirePort.H);
+// Second pneumatics - solenoid on brain three-wire port A
+digital_out Solenoid2 = digital_out(Brain.ThreeWirePort.A);
 
 void vexcodeInit( void ) {
   // Set stopping modes to COAST for drive and intake, matching Python setup

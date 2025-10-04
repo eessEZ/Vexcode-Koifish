@@ -105,17 +105,19 @@ PORT3,     -PORT4,
 
 );
 
-int current_auton_selection =2;
+int current_auton_selection =0;
 bool auto_started = false;
 // Driver state mirrored from Python config
 bool is_tank_drive = true; // Set tank drive as default
 bool is_reverse_arcade = false;
 int drive_speed = 100;
 bool pneumatics_extended = false; // placeholder, no direct solenoid mapped
+bool pneumatics2_extended = false; // second pneumatics state
 
 bool prev_toggle_combo = false;
 bool prev_speed_toggle = false;
 bool prev_pneumatics_press = false;
+bool prev_pneumatics2_press = false;
 bool prev_reverse_arcade_combo = false;
 
 /**
@@ -196,29 +198,23 @@ void autonomous(void) {
     case 0: {
       // Ported Python-style autonomous
       // intake1_forward_only()
-
-      // drive_pid(38) -> approximate with chassis.drive_distance(38)
-      chassis.drive_distance(13);
+      chassis.drive_distance(20);
       Intake1.spin(fwd, 100, pct);
       Intake2.stop();
       Intake2.setStopping(hold);
-      chassis.turn_to_angle(25);
-      // Second drive_distance(13) at 40% speed
-      chassis.set_drive_constants(4, 1.0, 0.5, 6, 0);
-      chassis.drive_distance(16);
-      chassis.set_drive_constants(8, 1.0, 0.5, 6, 0);
+      chassis.turn_to_angle(46.8476);
+      chassis.drive_max_voltage = 4;
+      chassis.drive_distance(11);
       wait(0.5, sec);
-      // Restore normal speed for turns
+      chassis.turn_to_angle(0);
       Intake1.stop();
       Intake2.stop();
-      chassis.turn_to_angle(0);
-
-      chassis.drive_distance(-22);
+      chassis.drive_max_voltage = 8;
+      chassis.drive_distance(-32);
       chassis.turn_to_angle(90);
-      chassis.drive_distance(27);
+      chassis.drive_distance(24);
       chassis.turn_to_angle(180);
       chassis.drive_distance(-18);
-      chassis.turn_to_angle(180);
       // intake forward for 2 seconds
       Intake1.spin(fwd, 100, pct);
       Intake2.spin(fwd, 100, pct);
@@ -233,14 +229,14 @@ void autonomous(void) {
       Intake1.spin(fwd, 100, pct);
       //drive to the matchload at 50% speed
       chassis.set_drive_constants(4, 1, 0.5, 6, 0);
-      chassis.drive_distance(30);
+      chassis.drive_distance(31);
       chassis.turn_to_angle(180);
       chassis.set_drive_constants(8, 1, 0.5, 6, 0);
       // Restore normal speed
       wait(0.4,sec);
       Intake1.stop();
       //drive back
-      chassis.drive_distance(-30);
+      chassis.drive_distance(-31);
       // Deactivate pneumatics
       Solenoid.set(false);
       pneumatics_extended = false;
@@ -255,81 +251,12 @@ void autonomous(void) {
 
     } break;
     case 1:{   
-      
-        
+       
       // Ported Python-style autonomous
       // intake1_forward_only()
 
       // drive_pid(38) -> approximate with chassis.drive_distance(38)
-      chassis.drive_distance(13);
-      Intake1.spin(fwd, 100, pct);
-      Intake2.stop();
-      Intake2.setStopping(hold);
-      chassis.turn_to_angle(-25);
-      // Second drive_distance(13) at 40% speed
-      chassis.set_drive_constants(4, 1.0, 0.5, 5, 0);
-      chassis.drive_distance(16);
-      chassis.set_drive_constants(8, 1, 0.5, 5, 0);
-      wait(0.4, sec);
-      // Restore normal speed for turns
-      Intake1.stop();
-      Intake2.stop();
-      chassis.turn_to_angle(0);
-
-      chassis.drive_distance(-22);
-      chassis.turn_to_angle(-90);
-      chassis.drive_distance(27);
-      chassis.turn_to_angle(180);
-      chassis.drive_distance(-16);
-      chassis.turn_to_angle(180);
-      // intake forward for 2 seconds
-      Intake1.spin(fwd, 100, pct);
-      Intake2.spin(fwd, 100, pct);
-      wait(1.5, sec);
-      Intake1.stop();
-      Intake2.stop();
-      Intake2.setStopping(hold);
-      
-      // Activate pneumatics
-      Solenoid.set(true);
-      pneumatics_extended = true;
-      Intake1.spin(fwd, 100, pct);
-      //drive to the matchload at 50% speed
-      chassis.set_drive_constants(4, 1, 0.5, 5, 0);
-      chassis.drive_distance(30);
-      chassis.turn_to_angle(180);
-      chassis.set_drive_constants(8, 1, 0.5, 5, 0);
-      // Restore normal speed
-      wait(1,sec);
-      Intake1.stop();
-      //drive back
-      chassis.drive_distance(-30);
-      // Deactivate pneumatics
-      Solenoid.set(false);
-      pneumatics_extended = false;
-      Intake1.spin(fwd, 100, pct);
-      Intake2.spin(fwd, 100, pct);
-      wait(1.5,sec);
-      chassis.drive_distance(10);
-      
-      chassis.drive_distance(-10);
-      
-      chassis.drive_distance(5);
-
-         
-
-    }break;
-
-
-
-    case 2:
-      {
-        
-      // Ported Python-style autonomous
-      // intake1_forward_only()
-
-      // drive_pid(38) -> approximate with chassis.drive_distance(38)
-      chassis.drive_distance(13);
+      chassis.drive_distance(25.5);
       Intake1.spin(fwd, 100, pct);
       Intake2.stop();
       Intake2.setStopping(hold);
@@ -344,7 +271,7 @@ void autonomous(void) {
       Intake1.stop();
       Intake2.stop();
       chassis.turn_to_angle(0);
-      chassis.drive_max_voltage = 6;
+      chassis.drive_max_voltage = 8;
       chassis.turn_max_voltage = 8;
       chassis.drive_distance(-22);
       chassis.turn_to_angle(-90);
@@ -400,7 +327,12 @@ void autonomous(void) {
       
       chassis.drive_distance(5);
 
-      }
+       
+    }break;
+
+
+
+    case 2:
       break;
     case 3:
       swing_test();
@@ -535,6 +467,16 @@ void usercontrol(void) {
       if (pneumatics_extended) Brain.Screen.print("Pneumatics: Extended"); else Brain.Screen.print("Pneumatics: Retracted");
     }
     prev_pneumatics_press = pneu_press;
+
+    // === Second Pneumatics toggle (A) ===
+    bool pneu2_press = Controller1.ButtonA.pressing();
+    if (pneu2_press && !prev_pneumatics2_press){
+      pneumatics2_extended = !pneumatics2_extended;
+      Solenoid2.set(pneumatics2_extended);
+      Brain.Screen.clearScreen();
+      if (pneumatics2_extended) Brain.Screen.print("Pneumatics 2: Extended"); else Brain.Screen.print("Pneumatics 2: Retracted");
+    }
+    prev_pneumatics2_press = pneu2_press;
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.

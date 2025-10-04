@@ -26,5 +26,6 @@ extern inertial InertialSensor;
 
 // Pneumatics
 extern digital_out Solenoid;
+extern digital_out Solenoid2;
 
 void  vexcodeInit( void );
