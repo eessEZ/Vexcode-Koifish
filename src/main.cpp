@@ -105,7 +105,7 @@ PORT3,     -PORT4,
 
 );
 
-int current_auton_selection =0;
+int current_auton_selection =1;
 bool auto_started = false;
 // Driver state mirrored from Python config
 bool is_tank_drive = true; // Set tank drive as default
@@ -131,6 +131,12 @@ void pre_auton() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   default_constants();
+  
+  // Initialize pneumatics to retracted position
+  Solenoid.set(false);
+  Solenoid2.set(false);
+  pneumatics_extended = false;
+  pneumatics2_extended = false;
 
   while(!auto_started){
     Brain.Screen.clearScreen();
@@ -195,144 +201,22 @@ void autonomous(void) {
   RightBack.setStopping(hold);
   
   switch(current_auton_selection){ 
-    case 0: {
-      // Ported Python-style autonomous
-      // intake1_forward_only()
-      chassis.drive_distance(20);
-      Intake1.spin(fwd, 100, pct);
-      Intake2.stop();
-      Intake2.setStopping(hold);
-      chassis.turn_to_angle(46.8476);
-      chassis.drive_max_voltage = 4;
-      chassis.drive_distance(11);
-      wait(0.5, sec);
-      chassis.turn_to_angle(0);
-      Intake1.stop();
-      Intake2.stop();
-      chassis.drive_max_voltage = 8;
-      chassis.drive_distance(-32);
-      chassis.turn_to_angle(90);
-      chassis.drive_distance(24);
-      chassis.turn_to_angle(180);
-      chassis.drive_distance(-18);
-      // intake forward for 2 seconds
-      Intake1.spin(fwd, 100, pct);
-      Intake2.spin(fwd, 100, pct);
-      wait(1.5, sec);
-      Intake1.stop();
-      Intake2.stop();
-      Intake2.setStopping(hold);
-      
-      // Activate pneumatics
-      Solenoid.set(true);
-      pneumatics_extended = true;
-      Intake1.spin(fwd, 100, pct);
-      //drive to the matchload at 50% speed
-      chassis.set_drive_constants(4, 1, 0.5, 6, 0);
-      chassis.drive_distance(31);
-      chassis.turn_to_angle(180);
-      chassis.set_drive_constants(8, 1, 0.5, 6, 0);
-      // Restore normal speed
-      wait(0.4,sec);
-      Intake1.stop();
-      //drive back
-      chassis.drive_distance(-31);
-      // Deactivate pneumatics
-      Solenoid.set(false);
-      pneumatics_extended = false;
-      Intake1.spin(fwd, 100, pct);
-      Intake2.spin(fwd, 100, pct);
-      wait(1.5,sec);
-      chassis.drive_distance(10);
-      
-      chassis.drive_distance(-10);
-      
-      chassis.drive_distance(5);
-
-    } break;
-    case 1:{   
+    case 0: 
+    right_side_auton();
+    
+    break;
+    case 1:
+    left_side_auton();
        
-      // Ported Python-style autonomous
-      // intake1_forward_only()
-
-      // drive_pid(38) -> approximate with chassis.drive_distance(38)
-      chassis.drive_distance(25.5);
-      Intake1.spin(fwd, 100, pct);
-      Intake2.stop();
-      Intake2.setStopping(hold);
-      chassis.turn_to_angle(-25);
-      // Second drive_distance(13) at 40% speed
-      chassis.set_drive_constants(4, 1.0, 0.5, 6, 0);
-      chassis.drive_distance(16);
-      
-      chassis.set_drive_constants(8, 1, 0.5, 6, 0);
-      wait(0.4, sec);
-      // Restore normal speed for turns
-      Intake1.stop();
-      Intake2.stop();
-      chassis.turn_to_angle(0);
-      chassis.drive_max_voltage = 8;
-      chassis.turn_max_voltage = 8;
-      chassis.drive_distance(-22);
-      chassis.turn_to_angle(-90);
-      chassis.drive_distance(26);
-      chassis.turn_to_angle(180);
-      vex::task deploy1([]{
-        vex::wait(900, msec);
-        Intake1.spin(fwd, 100, pct);
-        Intake2.spin(fwd, 100, pct);
-        wait(0.4, sec);
-        return 0;
-      });
-      
-      chassis.drive_distance(-18);
-      chassis.turn_to_angle(180);
-      // intake forward for 2 seconds
-      
-      Intake1.stop();
-      Intake2.stop();
-      Intake2.setStopping(hold);
-      
-      // Activate pneumatics
-      Solenoid.set(true);
-      pneumatics_extended = true;
-      Intake1.spin(fwd, 100, pct);
-      //drive to the matchload at 50% speed
-      chassis.set_turn_exit_conditions(1.0, 50, 900);
-      chassis.turn_to_angle(178);
-      chassis.set_drive_exit_conditions(1.0, 50, 2000);
-      chassis.drive_distance(32);
-      
-      
-      chassis.set_drive_constants(8, 1, 0.5, 6, 0);
-      // Restore normal speed
-      wait(0.4,sec);
-      Intake1.stop();
-      //drive back
-      vex::task deploy2([]{
-        vex::wait(1200, msec);
-        Intake1.spin(fwd, 100, pct);
-        Intake2.spin(fwd, 100, pct);
-        wait(0.4, sec);
-        return 0;
-      });
-      chassis.drive_distance(-32);
-      // Deactivate pneumatics
-      Solenoid.set(false);
-      pneumatics_extended = false;
-      
-      chassis.drive_distance(10);
-      
-      chassis.drive_distance(-10);
-      
-      chassis.drive_distance(5);
-
-       
-    }break;
+    break;
 
 
 
     case 2:
+      {
+        chassis.drive_distance(24);
+
+      }
       break;
     case 3:
       swing_test();
