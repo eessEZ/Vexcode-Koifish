@@ -50,7 +50,7 @@ motor_group(LeftFront, LeftMiddle, LeftBack),
 motor_group(RightFront, RightMiddle, RightBack),
 
 //Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e. "PORT1", not simply "1"):
-PORT16,
+PORT12,
 
 //Input your wheel diameter. (4" omnis are actually closer to 4.125"):
 3.25,
@@ -130,13 +130,31 @@ bool prev_reverse_arcade_combo = false;
 void pre_auton() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  
+  // IMMEDIATELY retract pneumatics when program starts
+  Solenoid.set(false);        // Force Port H pneumatics retracted
+  Solenoid2.set(true);        // Force Port A pneumatics ON by default
+  wait(50, msec);             // Brief delay to ensure command processes
+  
+  // Calibrate gyro sensor
+  InertialSensor.calibrate();
+  while (InertialSensor.isCalibrating()) {
+    wait(10, msec);
+  }
+  wait(500, msec);
+  
   default_constants();
   
-  // Initialize pneumatics to retracted position
-  Solenoid.set(false);
-  Solenoid2.set(false);
+  // Initialize pneumatics to retracted position (safety default)
+  Solenoid.set(false);        // L2 pneumatics - retracted
+  Solenoid2.set(true);        // A pneumatics - ON by default
   pneumatics_extended = false;
-  pneumatics2_extended = false;
+  pneumatics2_extended = true;
+  
+  // Ensure pneumatics are fully retracted with a small delay
+  wait(100, msec);
+  Solenoid.set(false);        // Double-check Port H pneumatics retracted
+  Solenoid2.set(true);        // Double-check Port A pneumatics ON
 
   while(!auto_started){
     Brain.Screen.clearScreen();
@@ -219,10 +237,64 @@ void autonomous(void) {
       }
       break;
     case 3:
-      swing_test();
+      skills_auton();
       break;
     case 4:
-      full_test();
+      chassis.drive_distance(13);
+      Intake1.spin(fwd, 100, pct);
+      Intake2.stop();
+      Intake2.setStopping(hold);
+      chassis.turn_to_angle(25);
+      // Second drive_distance(13) at 40% speed
+      chassis.set_drive_constants(4, 1.0, 0.5, 6, 0);
+      chassis.drive_distance(16);
+      chassis.set_drive_constants(8, 1.0, 0.5, 6, 0);
+      wait(0.5, sec);
+      // Restore normal speed for turns
+      Intake1.stop();
+      Intake2.stop();
+      chassis.turn_to_angle(0);
+
+      chassis.drive_distance(-22);
+      chassis.turn_to_angle(90);
+      chassis.drive_distance(27);
+      chassis.turn_to_angle(180);
+      chassis.drive_distance(-18);
+      chassis.turn_to_angle(180);
+      // intake forward for 2 seconds
+      Intake1.spin(fwd, 100, pct);
+      Intake2.spin(fwd, 100, pct);
+      wait(1.5, sec);
+      Intake1.stop();
+      Intake2.stop();
+      Intake2.setStopping(hold);
+      
+      // Activate pneumatics
+      Solenoid.set(true);
+      pneumatics_extended = true;
+      Intake1.spin(fwd, 100, pct);
+      //drive to the matchload at 50% speed
+      chassis.set_drive_constants(4, 1, 0.5, 6, 0);
+      chassis.drive_distance(30);
+      chassis.turn_to_angle(180);
+      chassis.set_drive_constants(8, 1, 0.5, 6, 0);
+      // Restore normal speed
+      wait(0.4,sec);
+      Intake1.stop();
+      //drive back
+      chassis.drive_distance(-30);
+      // Deactivate pneumatics
+      Solenoid.set(false);
+      pneumatics_extended = false;
+      Intake1.spin(fwd, 100, pct);
+      Intake2.spin(fwd, 100, pct);
+      wait(1.5,sec);
+      chassis.drive_distance(10);
+      
+      chassis.drive_distance(-10);
+      
+      chassis.drive_distance(5);
+
       break;
     case 5:
       odom_test();
@@ -254,6 +326,12 @@ void usercontrol(void) {
   RightFront.setStopping(coast);
   RightMiddle.setStopping(coast);
   RightBack.setStopping(coast);
+  
+  // Reset pneumatics when entering user control
+  Solenoid.set(false);        // L2 pneumatics - retracted
+  Solenoid2.set(true);        // A pneumatics - ON by default
+  pneumatics_extended = false;
+  pneumatics2_extended = true;
   
   // User control code here, inside the loop
   while (1) {
@@ -320,21 +398,31 @@ void usercontrol(void) {
     // === Drive Control ===
     int left_speed = 0;
     int right_speed = 0;
-    if (is_tank_drive){
-      left_speed = (int)(deadband(Controller1.Axis3.position(), 5) * drive_speed / 100.0);
-      right_speed = (int)(deadband(Controller1.Axis2.position(), 5) * drive_speed / 100.0);
-    } else if (is_reverse_arcade) {
-      // Reverse arcade: Axis4 (left/right) for left/right, Axis2 (left/right) for forward/back
-      int fwd = (int)deadband(Controller1.Axis2.position(), 5);
-      int turn = (int)deadband(Controller1.Axis4.position(), 5);
-      left_speed = (int)((fwd + turn) * drive_speed / 100.0);
-      right_speed = (int)((fwd - turn) * drive_speed / 100.0);
+    
+    // === Forward Movement (Down Button) ===
+    if (Controller1.ButtonDown.pressing()) {
+      // Move straight forward at 80% speed
+      int forward_speed = (int)(80 * drive_speed / 100.0);
+      left_speed = forward_speed;
+      right_speed = forward_speed;
     } else {
-      // Normal arcade: Axis3 (forward/back) for forward/back, Axis1 (left/right) for left/right
-      int fwd = (int)deadband(Controller1.Axis3.position(), 5);
-      int turn = (int)deadband(Controller1.Axis1.position(), 5);
-      left_speed = (int)((fwd + turn) * drive_speed / 100.0);
-      right_speed = (int)((fwd - turn) * drive_speed / 100.0);
+      // Normal joystick control
+      if (is_tank_drive){
+        left_speed = (int)(deadband(Controller1.Axis3.position(), 5) * drive_speed / 100.0);
+        right_speed = (int)(deadband(Controller1.Axis2.position(), 5) * drive_speed / 100.0);
+      } else if (is_reverse_arcade) {
+        // Reverse arcade: Axis4 (left/right) for left/right, Axis2 (left/right) for forward/back
+        int fwd = (int)deadband(Controller1.Axis2.position(), 5);
+        int turn = (int)deadband(Controller1.Axis4.position(), 5);
+        left_speed = (int)((fwd + turn) * drive_speed / 100.0);
+        right_speed = (int)((fwd - turn) * drive_speed / 100.0);
+      } else {
+        // Normal arcade: Axis3 (forward/back) for forward/back, Axis1 (left/right) for left/right
+        int fwd = (int)deadband(Controller1.Axis3.position(), 5);
+        int turn = (int)deadband(Controller1.Axis1.position(), 5);
+        left_speed = (int)((fwd + turn) * drive_speed / 100.0);
+        right_speed = (int)((fwd - turn) * drive_speed / 100.0);
+      }
     }
 
   // Apply to motors via chassis API (convert percent to volts)
