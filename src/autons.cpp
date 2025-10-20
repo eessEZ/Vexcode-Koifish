@@ -10,7 +10,7 @@
 
 void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
-  chassis.set_drive_constants(8, .9, 0, 2.5, 0);
+  chassis.set_drive_constants(8, .95, 0, 2.5, 0);
   chassis.set_heading_constants(6, .4, 0, 1, 0);
   chassis.set_turn_constants(8, .47, 0, 3.15, 0);
   chassis.set_swing_constants(12, .3, .001, 2, 15);
@@ -256,17 +256,18 @@ void skills_auton(){
 
   //chassis.drive_max_voltage = 4;
   chassis.turn_to_angle(90);
-  chassis.drive_distance(10);
+  chassis.drive_distance(9, 0, 4, 0);
+  chassis.drive_distance(-4);
+  chassis.drive_distance(4);
   //chassis.drive_max_voltage= 6;
-
-
   wait(1.5,sec);
+
   Intake1.stop();
 
 
-  chassis.drive_distance(-30);
-  Intake1.spin(reverse, 30, pct);
-  wait(0.15, sec);
+  chassis.drive_distance(-28);
+  Intake1.spin(reverse, 50, pct);
+  wait(0.2, sec);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(5,sec);
@@ -276,13 +277,49 @@ void skills_auton(){
   Intake1.stop();
   Intake2.stop();
   chassis.drive_distance(10);
-  chassis.set_turn_constants(8, .4, .03, 3, 15);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(48);
-  chassis.turn_to_angle(90);
-  chassis.drive_max_voltage= 12;
-  chassis.drive_distance(42);
 
+  //Other Side
+  chassis.drive_max_voltage= 6 ;
+  chassis.drive_distance(95);
+  chassis.turn_to_angle(90);
+  Solenoid.set(true);
+
+  Intake1.spin(fwd,100,pct);
+
+  chassis.drive_distance(18, 0, 4, 0);
+  chassis.drive_distance(-4);
+  chassis.drive_distance(4);
+  wait(1.5,sec);
+  Intake1.stop();
+
+  chassis.drive_distance(-28);
+  Intake1.spin(reverse, 30, pct);
+  wait(0.15, sec);
+  Solenoid.set(false);
+  Intake1.spin(fwd, 100, pct);
+  Intake2.spin(fwd, 100, pct);
+  wait(5,sec);
+  Intake1.stop();
+  Intake2.stop();
+  
+  chassis.drive_distance(10);
+  chassis.turn_to_angle(0);
+  chassis.drive_distance(50);
+  chassis.turn_to_angle(-90);
+  chassis.drive_max_voltage= 12;
+  chassis.drive_distance(-42);
+
+
+  
+
+
+  /*
+  chassis.drive_distance(48);
+  chassis.turn_to_angle(-90);
+  chassis.drive_max_voltage= 12;
+  chassis.drive_distance(-42);
+*/
 
  
 
