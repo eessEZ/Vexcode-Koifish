@@ -244,6 +244,7 @@ void right_side_auton(){
 void skills_auton(){
   default_constants();
  
+  //jvljhbbkj
   //std::cout << "11111111\n";
   chassis.drive_distance(29.5);
   //std::cout << "22222222\n";
