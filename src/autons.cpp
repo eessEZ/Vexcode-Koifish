@@ -10,15 +10,15 @@
 
 void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
-  chassis.set_drive_constants(8, .5, 0.2, 3, 0);
+  chassis.set_drive_constants(8, .9, 0, 2.5, 0);
   chassis.set_heading_constants(6, .4, 0, 1, 0);
-  chassis.set_turn_constants(6, .25, .03, 4.5, 8);
+  chassis.set_turn_constants(8, .47, 0, 3.15, 0);
   chassis.set_swing_constants(12, .3, .001, 2, 15);
 
   // Each exit condition set is in the form of (settle_error, settle_time, timeout).
   // Tighter settle conditions to prevent overshooting
-  chassis.set_drive_exit_conditions(1.0, 50, 4000);
-  chassis.set_turn_exit_conditions(1, 50, 3000);
+  chassis.set_drive_exit_conditions(1.0, 100, 3000);
+  chassis.set_turn_exit_conditions(2, 100, 3000);
   chassis.set_swing_exit_conditions(1, 100, 3000);
 }
 
@@ -151,7 +151,7 @@ void left_side_auton(){
   Intake2.stop();
   chassis.drive_distance(50);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(-22);  
+  chassis.drive_distance(-21);  
   chassis.turn_to_angle(180);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);

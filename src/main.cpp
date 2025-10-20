@@ -240,61 +240,7 @@ void autonomous(void) {
       skills_auton();
       break;
     case 4:
-      chassis.drive_distance(13);
-      Intake1.spin(fwd, 100, pct);
-      Intake2.stop();
-      Intake2.setStopping(hold);
-      chassis.turn_to_angle(25);
-      // Second drive_distance(13) at 40% speed
-      chassis.set_drive_constants(4, 1.0, 0.5, 6, 0);
-      chassis.drive_distance(16);
-      chassis.set_drive_constants(8, 1.0, 0.5, 6, 0);
-      wait(0.5, sec);
-      // Restore normal speed for turns
-      Intake1.stop();
-      Intake2.stop();
-      chassis.turn_to_angle(0);
-
-      chassis.drive_distance(-22);
-      chassis.turn_to_angle(90);
-      chassis.drive_distance(27);
       chassis.turn_to_angle(180);
-      chassis.drive_distance(-18);
-      chassis.turn_to_angle(180);
-      // intake forward for 2 seconds
-      Intake1.spin(fwd, 100, pct);
-      Intake2.spin(fwd, 100, pct);
-      wait(1.5, sec);
-      Intake1.stop();
-      Intake2.stop();
-      Intake2.setStopping(hold);
-      
-      // Activate pneumatics
-      Solenoid.set(true);
-      pneumatics_extended = true;
-      Intake1.spin(fwd, 100, pct);
-      //drive to the matchload at 50% speed
-      chassis.set_drive_constants(4, 1, 0.5, 6, 0);
-      chassis.drive_distance(30);
-      chassis.turn_to_angle(180);
-      chassis.set_drive_constants(8, 1, 0.5, 6, 0);
-      // Restore normal speed
-      wait(0.4,sec);
-      Intake1.stop();
-      //drive back
-      chassis.drive_distance(-30);
-      // Deactivate pneumatics
-      Solenoid.set(false);
-      pneumatics_extended = false;
-      Intake1.spin(fwd, 100, pct);
-      Intake2.spin(fwd, 100, pct);
-      wait(1.5,sec);
-      chassis.drive_distance(10);
-      
-      chassis.drive_distance(-10);
-      
-      chassis.drive_distance(5);
-
       break;
     case 5:
       odom_test();
