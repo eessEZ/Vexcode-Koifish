@@ -166,10 +166,10 @@ void left_side_auton(){
   chassis.drive_max_voltage = 5.5;
   //drive to the matchload at 50% speed
   chassis.turn_to_angle(180);
-  chassis.drive_distance(29.25);
+  chassis.drive_distance(27.5);
   chassis.turn_to_angle(180);
   chassis.drive_max_voltage = 8;
-  wait(0.4,sec);
+  wait(0.3,sec);
   Intake1.stop();
   //drive back
   
@@ -182,6 +182,7 @@ void left_side_auton(){
   wait(2,sec);
   chassis.drive_distance(10);
   
+  chassis.drive_max_voltage = 100;
   chassis.drive_distance(-10);
   
   chassis.drive_distance(5);
