@@ -62,7 +62,7 @@ PORT12,
 
 //Gyro scale, this is what your gyro reads when you spin the robot 360 degrees.
 //For most cases 360 will do fine here, but this scale factor can be very helpful when precision is necessary.
-360,
+357,
 
 /*---------------------------------------------------------------------------*/
 /*                                  PAUSE!                                   */
