@@ -169,7 +169,7 @@ void left_side_auton(){
   chassis.drive_distance(27.5);
   chassis.turn_to_angle(180);
   chassis.drive_max_voltage = 8;
-  wait(0.3,sec);
+  wait(0.4,sec);
   Intake1.stop();
   //drive back
   
@@ -247,16 +247,15 @@ void skills_auton(){
  
   //jvljhbbkj
   //std::cout << "11111111\n";
-  chassis.drive_distance(29.5);
+  chassis.drive_distance(30);
   //std::cout << "22222222\n";
-
 
   Solenoid.set(true);
   chassis.turn_to_angle(90);
   Intake1.spin(fwd, 100, pct);
 
   chassis.drive_max_voltage = 4;
-  chassis.turn_to_angle(92);
+  chassis.turn_to_angle(90);
   chassis.drive_distance(12);
   chassis.drive_max_voltage= 6;
 
