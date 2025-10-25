@@ -12,7 +12,7 @@ void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
   chassis.set_drive_constants(8, .95, 0, 2.5, 0);
   chassis.set_heading_constants(6, .4, 0, 1, 0);
-  chassis.set_turn_constants(8, .47, 0, 2.15, 0);
+  chassis.set_turn_constants(8, .35, 0, 1.8, 0);
   chassis.set_swing_constants(12, .3, .001, 2, 15);
 
   // Each exit condition set is in the form of (settle_error, settle_time, timeout).
@@ -245,9 +245,10 @@ void right_side_auton(){
 void skills_auton(){
   default_constants();
  
+  Solenoid2.set(false);
   //jvljhbbkj
   //std::cout << "11111111\n";
-  chassis.drive_distance(31);
+  chassis.drive_distance(31.5);
   //std::cout << "22222222\n";
 
   Solenoid.set(true);
@@ -256,30 +257,38 @@ void skills_auton(){
 
   //chassis.drive_max_voltage = 4;
   chassis.turn_to_angle(90);
-  chassis.drive_distance(9, 0, 4, 0);
-  chassis.drive_distance(-4);
-  chassis.drive_distance(4);
+  chassis.drive_distance(12);
+  chassis.drive_distance(-4.25);
+  chassis.drive_distance(6.25);
   //chassis.drive_max_voltage= 6;
   wait(1.5,sec);
 
   Intake1.stop();
-
 
   chassis.drive_distance(-28);
   Intake1.spin(reverse, 50, pct);
   wait(0.2, sec);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
-  wait(5,sec);
+  wait(4.5,sec);
 
 
   Solenoid.set(false);
   Intake1.stop();
   Intake2.stop();
   chassis.drive_distance(10);
+  chassis.turn_to_angle(0);
+  chassis.drive_distance(11);
+  chassis.turn_to_angle(-90);
+  chassis.drive_distance(85);
   chassis.turn_to_angle(180);
+  chassis.drive_distance(5);
+  chassis.turn_to_angle(90);
+
+  //chassis.turn_to_angle(180);
 
   //Other Side
+  /*
   chassis.drive_max_voltage= 6 ;
   chassis.drive_distance(95);
   chassis.turn_to_angle(90);
@@ -309,7 +318,7 @@ void skills_auton(){
   chassis.turn_to_angle(-90);
   chassis.drive_max_voltage= 12;
   chassis.drive_distance(-42);
-
+  */
 
   
 
