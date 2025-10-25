@@ -248,7 +248,7 @@ void skills_auton(){
   Solenoid2.set(false);
   //jvljhbbkj
   //std::cout << "11111111\n";
-  chassis.drive_distance(31.5);
+  chassis.drive_distance(31);
   //std::cout << "22222222\n";
 
   //Matchloader Pt.1
@@ -262,18 +262,21 @@ void skills_auton(){
   chassis.drive_distance(10.5);
   chassis.drive_distance(-5);
   chassis.drive_distance(5);
+  chassis.turn_to_angle(90);
   //chassis.drive_max_voltage= 6;
-  wait(1.5,sec);
+  wait(1.63,sec);
 
   Intake1.stop();
 
   //Scoring Long Goal
   chassis.drive_distance(-30.2);
   Intake1.spin(reverse, 50, pct);
-  wait(0.2, sec);
+  wait(0.25, sec);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(4.5,sec);
+  chassis.drive_distance(4);
+  chassis.drive_distance(-4);
 
 
   //Travel between Long Goal and Wall
@@ -283,13 +286,26 @@ void skills_auton(){
   chassis.drive_distance(10);
   chassis.turn_to_angle(0);
   chassis.drive_distance(12.5);
-  chassis.turn_to_angle(-90);
+  chassis.turn_to_angle(-88.25);
   chassis.drive_distance(40);
-  chassis.turn_to_angle(-90);
+  chassis.turn_to_angle(-88.75);
   chassis.drive_distance(45);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(5);
-  chassis.turn_to_angle(90);
+  chassis.drive_distance(13.1);
+  chassis.turn_to_angle(-90);
+  Intake1.spin(fwd, 100, pct);
+  Solenoid.set(true);
+  chassis.drive_distance(12);
+  wait(1.5,sec);
+  chassis.drive_distance(-30.2);
+  Intake1.spin(reverse, 50, pct);
+  wait(0.25, sec);
+  Intake1.spin(fwd, 100, pct);
+  Intake2.spin(fwd, 100, pct);
+  wait(4.5,sec);
+  chassis.drive_distance(3.4);
+  chassis.drive_distance(-3.4);
+
 
   //chassis.turn_to_angle(180);
 
