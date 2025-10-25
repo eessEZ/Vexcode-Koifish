@@ -251,20 +251,23 @@ void skills_auton(){
   chassis.drive_distance(31.5);
   //std::cout << "22222222\n";
 
-  Solenoid.set(true);
+  //Matchloader Pt.1
   chassis.turn_to_angle(90);
+  Solenoid.set(true);
   Intake1.spin(fwd, 100, pct);
 
   //chassis.drive_max_voltage = 4;
+  //Matchloader Pt.2
   chassis.turn_to_angle(90);
-  chassis.drive_distance(12);
-  chassis.drive_distance(-4.25);
-  chassis.drive_distance(6.35);
+  chassis.drive_distance(10.5);
+  chassis.drive_distance(-5);
+  chassis.drive_distance(5);
   //chassis.drive_max_voltage= 6;
   wait(1.5,sec);
 
   Intake1.stop();
 
+  //Scoring Long Goal
   chassis.drive_distance(-30.2);
   Intake1.spin(reverse, 50, pct);
   wait(0.2, sec);
@@ -273,6 +276,7 @@ void skills_auton(){
   wait(4.5,sec);
 
 
+  //Travel between Long Goal and Wall
   Solenoid.set(false);
   Intake1.stop();
   Intake2.stop();
