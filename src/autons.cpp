@@ -259,13 +259,13 @@ void skills_auton(){
   chassis.turn_to_angle(90);
   chassis.drive_distance(12);
   chassis.drive_distance(-4.25);
-  chassis.drive_distance(6.25);
+  chassis.drive_distance(6.35);
   //chassis.drive_max_voltage= 6;
   wait(1.5,sec);
 
   Intake1.stop();
 
-  chassis.drive_distance(-28);
+  chassis.drive_distance(-30.2);
   Intake1.spin(reverse, 50, pct);
   wait(0.2, sec);
   Intake1.spin(fwd, 100, pct);
@@ -278,9 +278,11 @@ void skills_auton(){
   Intake2.stop();
   chassis.drive_distance(10);
   chassis.turn_to_angle(0);
-  chassis.drive_distance(11);
+  chassis.drive_distance(12.5);
   chassis.turn_to_angle(-90);
-  chassis.drive_distance(85);
+  chassis.drive_distance(40);
+  chassis.turn_to_angle(-90);
+  chassis.drive_distance(45);
   chassis.turn_to_angle(180);
   chassis.drive_distance(5);
   chassis.turn_to_angle(90);
