@@ -246,10 +246,7 @@ void skills_auton(){
   default_constants();
  
   Solenoid2.set(false);
-  //jvljhbbkj
-  //std::cout << "11111111\n";
   chassis.drive_distance(31);
-  //std::cout << "22222222\n";
 
   //Matchloader Pt.1
   chassis.turn_to_angle(90);
