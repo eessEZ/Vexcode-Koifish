@@ -284,11 +284,11 @@ void skills_auton(){
   chassis.turn_to_angle(0);
   chassis.drive_distance(12.5);
   chassis.turn_to_angle(-88.25);
-  chassis.drive_distance(40);
-  chassis.turn_to_angle(-88.75);
-  chassis.drive_distance(45);
+  chassis.drive_distance(85);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(13.1);
+  chassis.drive_distance(14.5);
+  chassis.drive_distance(-5);
+  chassis.drive_distance(5);
   chassis.turn_to_angle(-90);
   Intake1.spin(fwd, 100, pct);
   Solenoid.set(true);
