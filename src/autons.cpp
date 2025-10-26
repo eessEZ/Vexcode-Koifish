@@ -272,8 +272,8 @@ void skills_auton(){
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(4.5,sec);
-  chassis.drive_distance(4);
-  chassis.drive_distance(-4);
+  chassis.drive_distance(5);
+  chassis.drive_distance(-5);
 
 
   //Travel between Long Goal and Wall
@@ -300,8 +300,8 @@ void skills_auton(){
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(4.5,sec);
-  chassis.drive_distance(3.4);
-  chassis.drive_distance(-3.4);
+  chassis.drive_distance(5);
+  chassis.drive_distance(-5);
 
 
   //chassis.turn_to_angle(180);
