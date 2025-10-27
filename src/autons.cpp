@@ -10,14 +10,14 @@
 
 void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
-  chassis.set_drive_constants(8, .95, 0, 2.5, 0);
-  chassis.set_heading_constants(6, .4, 0, 1, 0);
-  chassis.set_turn_constants(8, .35, 0, 1.8, 0);
+  chassis.set_drive_constants(10, .67, 0, 2, 0); 
+  chassis.set_heading_constants(1, .4, 0, 1, 0);
+  chassis.set_turn_constants(10, .17, 0, .85, 0);
   chassis.set_swing_constants(12, .3, .001, 2, 15);
 
   // Each exit condition set is in the form of (settle_error, settle_time, timeout).
   // Tighter settle conditions to prevent overshooting
-  chassis.set_drive_exit_conditions(1.0, 100, 3000);
+  chassis.set_drive_exit_conditions(1, 100, 3000);
   chassis.set_turn_exit_conditions(2, 100, 3000);
   chassis.set_swing_exit_conditions(1, 100, 3000);
 }
@@ -244,9 +244,23 @@ void right_side_auton(){
 
 void skills_auton(){
   default_constants();
+  
+  //chassis.drive_max_voltage = 12;
+  //chassis.turn_to_angle(90);
+
+  chassis.drive_distance(48);
+  chassis.turn_to_angle(90);
+  chassis.drive_distance(48);
+  chassis.turn_to_angle(180);
+  chassis.drive_distance(48);
+  chassis.turn_to_angle(270);
+  chassis.drive_distance(48);
+  chassis.turn_to_angle(0);
+
+  /*
  
   Solenoid2.set(false);
-  chassis.drive_distance(31);
+  chassis.drive_distance(32);
 
   //Matchloader Pt.1
   chassis.turn_to_angle(90);
@@ -256,9 +270,10 @@ void skills_auton(){
   //chassis.drive_max_voltage = 4;
   //Matchloader Pt.2
   chassis.turn_to_angle(90);
-  chassis.drive_distance(10.2);
+  
+  chassis.drive_distance(10.7);
   chassis.drive_distance(-5);
-  chassis.drive_distance(5.6);
+  chassis.drive_distance(5.6, 12, 90, 0, 1, 100, 1000);
   chassis.turn_to_angle(90);
   //chassis.drive_max_voltage= 6;
   wait(1.63,sec);
@@ -282,29 +297,31 @@ void skills_auton(){
   Intake2.stop();
   chassis.drive_distance(10);
   chassis.turn_to_angle(0);
-  chassis.drive_distance(12.5);
-  chassis.turn_to_angle(-88.25);
+  chassis.drive_distance(14.35);
+  chassis.turn_to_angle(-90);
   chassis.drive_distance(85);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(12.5);
+  chassis.drive_distance(12);
   chassis.turn_to_angle(-90);
+
+  //Matchload #3
   Intake1.spin(fwd, 100, pct);
   Solenoid.set(true);
-  chassis.drive_distance(14);
+  chassis.drive_distance(14.2);
   chassis.drive_distance(-5);
   chassis.drive_distance(6);
   wait(1.5,sec);
+
+  //Scoring 
   chassis.drive_distance(-30.2);
   Intake1.spin(reverse, 50, pct);
   wait(0.25, sec);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(4.5,sec);
-  //chassis.drive_distance(5);
-  //chassis.drive_distance(-5);
 
-
-  //chassis.turn_to_angle(180);
+  
+  chassis.turn_to_angle(180);
 
   //Other Side
   /*
