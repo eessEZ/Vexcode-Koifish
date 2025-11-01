@@ -246,20 +246,9 @@ void skills_auton(){
   default_constants();
   
   //chassis.drive_max_voltage = 12;
-  //chassis.drive_distance(30);
+  //chassis.turn_to_angle(90);
+
   
-
-  /*
-  chassis.drive_distance(48);
-  chassis.turn_to_angle(90);
-  chassis.drive_distance(48);
-  chassis.turn_to_angle(180);
-  chassis.drive_distance(48);
-  chassis.turn_to_angle(270);
-  chassis.drive_distance(48);
-  chassis.turn_to_angle(0);
-
-  */
  
   Solenoid2.set(false);
   chassis.drive_distance(32);
@@ -272,6 +261,7 @@ void skills_auton(){
   //chassis.drive_max_voltage = 4;
   //Matchloader Pt.2
   chassis.turn_to_angle(90);
+  
   chassis.drive_distance(10.7);
   chassis.drive_distance(-5);
   chassis.drive_distance(5.6, 12, 90, 0, 1, 100, 1000);
@@ -288,8 +278,9 @@ void skills_auton(){
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(4.5,sec);
-  //chassis.drive_distance(7);
-  //chassis.drive_distance(-7);
+  // chat gpt do the thing here: drive forward and backward without PID
+  chassis.drive_distance(10);
+  chassis.drive_distance(-10);
 
 
   //Travel between Long Goal and Wall
@@ -302,29 +293,50 @@ void skills_auton(){
   chassis.turn_to_angle(-90);
   chassis.drive_distance(85);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(12);
+  chassis.drive_distance(11.2);
   chassis.turn_to_angle(-90);
 
   //Matchload #2
   Intake1.spin(fwd, 100, pct);
   Solenoid.set(true);
-  chassis.drive_distance(14.5);
+  chassis.drive_distance(15.2);
   chassis.drive_distance(-5);
   chassis.drive_distance(6);
   wait(1.5,sec);
 
   //Scoring 
   chassis.drive_distance(-30.2);
+
   Intake1.spin(reverse, 50, pct);
   wait(0.25, sec);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
-  wait(2,sec);
+  wait(4.5,sec);
 
-  //Travel to next matchloader
+  //Travel between Matchload and wall 
   chassis.drive_distance(12);
   chassis.turn_to_angle(180);
-  //chassis drive_distance(96);
+  chassis.drive_distance(93);
+  chassis.turn_to_angle(-90);
+
+  //Matchload #3
+  Intake1.spin(fwd, 100, pct);
+  Solenoid.set(true);
+  chassis.drive_distance(14.2);
+  chassis.drive_distance(-5);
+  chassis.drive_distance(6);
+  wait(1.5,sec);
+
+  //Scoring 
+  chassis.drive_distance(-30.2);
+
+  Intake1.spin(reverse, 50, pct);
+  wait(0.25, sec);
+  Intake1.spin(fwd, 100, pct);
+  Intake2.spin(fwd, 100, pct);
+  wait(4.5,sec);
+
+
 
   //Other Side
   /*
