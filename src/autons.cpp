@@ -332,53 +332,6 @@ void skills_auton(){
   Intake2.spin(fwd, 100, pct);
   wait(4.5,sec);
 
-  // chat gpt do the thing here: drive forward and backward without PID
-  
-
-    /*
-    // Open-loop drive: spin drive motors at fixed percent for a short duration.
-    // Tweak openLoopSpeed and openLoopTime to match your robot/wheel size.
-    const int openLoopSpeed = 50;    // percent
-    const double openLoopTime = 0.4; // seconds (adjust to achieve ~10 inches)
-
-    // Drive forward
-    LeftFront.spin(fwd, openLoopSpeed, pct);
-    LeftMiddle.spin(fwd, openLoopSpeed, pct);
-    LeftBack.spin(fwd, openLoopSpeed, pct);
-    RightFront.spin(fwd, openLoopSpeed, pct);
-    RightMiddle.spin(fwd, openLoopSpeed, pct);
-    RightBack.spin(fwd, openLoopSpeed, pct);
-    wait(openLoopTime, sec);
-
-    // Stop with brake
-    LeftFront.stop(brake);
-    LeftMiddle.stop(brake);
-    LeftBack.stop(brake);
-    RightFront.stop(brake);
-    RightMiddle.stop(brake);
-    RightBack.stop(brake);
-
-    // Drive back (same speed/duration)
-    LeftFront.spin(reverse, openLoopSpeed, pct);
-    LeftMiddle.spin(reverse, openLoopSpeed, pct);
-    LeftBack.spin(reverse, openLoopSpeed, pct);
-    RightFront.spin(reverse, openLoopSpeed, pct);
-    RightMiddle.spin(reverse, openLoopSpeed, pct);
-    RightBack.spin(reverse, openLoopSpeed, pct);
-    wait(openLoopTime, sec);
-
-    // Stop again
-    LeftFront.stop(brake);
-    LeftMiddle.stop(brake);
-    LeftBack.stop(brake);
-    RightFront.stop(brake);
-    RightMiddle.stop(brake);
-    RightBack.stop(brake);
-  
-  // end open-loop section
-
-  chassis.turn_to_angle(90);
-  */
 
 
   //Travel between Long Goal and Wall
@@ -387,7 +340,7 @@ void skills_auton(){
   Intake2.stop();
   chassis.drive_distance(10);
   chassis.turn_to_angle(0);
-  chassis.drive_distance(16.35);
+  chassis.drive_distance(15.25);
   chassis.turn_to_angle(-90);
   chassis.drive_distance(85);
   chassis.turn_to_angle(180);
