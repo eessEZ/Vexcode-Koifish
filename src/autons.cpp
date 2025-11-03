@@ -299,9 +299,7 @@ void skills_auton(){
   
   //chassis.drive_max_voltage = 12;
   //chassis.turn_to_angle(90);
-
   
- 
   Solenoid2.set(false);
   chassis.drive_distance(32);
 
@@ -320,7 +318,6 @@ void skills_auton(){
   chassis.turn_to_angle(90);
   //chassis.drive_max_voltage= 6;
   wait(1.63,sec);
-
   Intake1.stop();
 
   //Scoring Long Goal
@@ -331,15 +328,13 @@ void skills_auton(){
   Intake2.spin(fwd, 100, pct);
   wait(4.5,sec);
 
-
-
   //Travel between Long Goal and Wall
   Solenoid.set(false);
   Intake1.stop();
   Intake2.stop();
   chassis.drive_distance(10);
-  chassis.turn_to_angle(0);
-  chassis.drive_distance(15.25);
+  chassis.turn_to_angle(180);
+  chassis.drive_distance(-15.25);
   chassis.turn_to_angle(-90);
   chassis.drive_distance(85);
   chassis.turn_to_angle(180);
@@ -387,11 +382,8 @@ void skills_auton(){
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(4.5,sec);
-  //chassis.drive_distance(12);
-  //chassis.turn_to_angle(180);
-  //chassis.drive
 
-
+  //OISHDWQNLKCNNLSIHD this is so sad
   //same code for left side of field that may or may not work
   //Matchload #4
   chassis.turn_to_angle(90);
