@@ -12,7 +12,7 @@ void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
   chassis.set_drive_constants(10, .67, 0, 2, 0); 
   chassis.set_heading_constants(1, .4, 0, 1, 0);
-  chassis.set_turn_constants(10, .17, 0, .85, 0);
+  chassis.set_turn_constants(10, .17, 0, .75, 0);
   chassis.set_swing_constants(12, .3, .001, 2, 15);
 
   // Each exit condition set is in the form of (settle_error, settle_time, timeout).
@@ -187,6 +187,59 @@ void left_side_auton(){
   
   chassis.drive_distance(5);
 }
+
+void right_side_9ball_auton(){
+  chassis.drive_distance(13);
+  Intake1.spin(fwd, 100, pct);
+  Intake2.stop();
+  Intake2.setStopping(hold);
+  chassis.turn_to_angle(30);
+  chassis.drive_distance(14);
+  chassis.drive_max_voltage = 8;
+  chassis.turn_to_angle(40);
+  chassis.drive_distance(20);
+  chassis.drive_distance(-20);
+  chassis.turn_to_angle(135);
+  Intake1.stop();
+  Intake2.stop();
+  chassis.drive_max_voltage = 6;
+  chassis.drive_distance(35);
+  chassis.turn_to_angle(180);
+  chassis.drive_distance(-20);
+  // intake forward for 2 seconds
+  Intake1.spin(fwd, 100, pct);
+  Intake2.spin(fwd, 100, pct);
+  wait(1.5, sec);
+  Intake1.stop();
+  Intake2.stop();
+  Intake2.setStopping(hold);
+  chassis.turn_to_angle(180);
+  // Activate pneumatics
+  Solenoid.set(true);
+  Intake1.spin(fwd, 100, pct);
+  chassis.drive_max_voltage = 6;
+  //drive to the matchload at 50% speed
+  chassis.drive_distance(29.5);
+  chassis.turn_to_angle(180);
+  chassis.drive_max_voltage = 10;
+  wait(0.4,sec);
+  Intake1.stop();
+  //drive back
+  chassis.drive_distance(-29.5);
+  // Deactivate pneumatics
+  Solenoid.set(false);
+  Intake1.spin(fwd, 100, pct);
+  Intake2.spin(fwd, 100, pct);
+  wait(1.5,sec);
+  chassis.drive_distance(10);
+  
+  chassis.drive_distance(-10);
+  
+  chassis.drive_distance(5);
+
+}
+
+
 
 void right_side_auton(){
   chassis.drive_distance(13);
