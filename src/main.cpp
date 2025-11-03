@@ -105,7 +105,7 @@ PORT3,     -PORT4,
 
 );
 
-int current_auton_selection =4;
+int current_auton_selection =1;
 bool auto_started = false;
 // Driver state mirrored from Python config
 bool is_tank_drive = true; // Set tank drive as default
@@ -345,6 +345,16 @@ void usercontrol(void) {
     int left_speed = 0;
     int right_speed = 0;
     
+    // Helper function to apply precision scaling based on stick position
+    auto apply_precision_scale = [](float raw_value) -> float {
+      float abs_value = fabs(raw_value);
+      if (abs_value < 50.0) {
+        return raw_value * 0.5;  // 0.5x speed for precise control below 50%
+      } else {
+        return raw_value * 1.0;  // 1x speed for full speed at 50% and above
+      }
+    };
+    
     // === Forward Movement (Down Button) ===
     if (Controller1.ButtonDown.pressing()) {
       // Move straight forward at 80% speed
@@ -354,18 +364,24 @@ void usercontrol(void) {
     } else {
       // Normal joystick control
       if (is_tank_drive){
-        left_speed = (int)(deadband(Controller1.Axis3.position(), 5) * drive_speed / 100.0);
-        right_speed = (int)(deadband(Controller1.Axis2.position(), 5) * drive_speed / 100.0);
+        float left_raw = deadband(Controller1.Axis3.position(), 5);
+        float right_raw = deadband(Controller1.Axis2.position(), 5);
+        left_speed = (int)(apply_precision_scale(left_raw) * drive_speed / 100.0);
+        right_speed = (int)(apply_precision_scale(right_raw) * drive_speed / 100.0);
       } else if (is_reverse_arcade) {
         // Reverse arcade: Axis4 (left/right) for left/right, Axis2 (left/right) for forward/back
-        int fwd = (int)deadband(Controller1.Axis2.position(), 5);
-        int turn = (int)deadband(Controller1.Axis4.position(), 5);
+        float fwd_raw = deadband(Controller1.Axis2.position(), 5);
+        float turn_raw = deadband(Controller1.Axis4.position(), 5);
+        float fwd = apply_precision_scale(fwd_raw);
+        float turn = apply_precision_scale(turn_raw);
         left_speed = (int)((fwd + turn) * drive_speed / 100.0);
         right_speed = (int)((fwd - turn) * drive_speed / 100.0);
       } else {
         // Normal arcade: Axis3 (forward/back) for forward/back, Axis1 (left/right) for left/right
-        int fwd = (int)deadband(Controller1.Axis3.position(), 5);
-        int turn = (int)deadband(Controller1.Axis1.position(), 5);
+        float fwd_raw = deadband(Controller1.Axis3.position(), 5);
+        float turn_raw = deadband(Controller1.Axis1.position(), 5);
+        float fwd = apply_precision_scale(fwd_raw);
+        float turn = apply_precision_scale(turn_raw);
         left_speed = (int)((fwd + turn) * drive_speed / 100.0);
         right_speed = (int)((fwd - turn) * drive_speed / 100.0);
       }
