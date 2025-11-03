@@ -301,7 +301,7 @@ void skills_auton(){
   //chassis.turn_to_angle(90);
   
   Solenoid2.set(false);
-  chassis.drive_distance(32);
+  chassis.drive_distance(30);
 
   //Matchloader Pt.1
   chassis.turn_to_angle(90);
@@ -334,7 +334,7 @@ void skills_auton(){
   Intake2.stop();
   chassis.drive_distance(10);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(-15.25);
+  chassis.drive_distance(-13);
   chassis.turn_to_angle(-90);
   chassis.drive_distance(85);
   chassis.turn_to_angle(180);
