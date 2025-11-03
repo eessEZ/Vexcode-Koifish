@@ -12,7 +12,7 @@ void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
   chassis.set_drive_constants(10, .8, 0, 1.8, 0); 
   chassis.set_heading_constants(1, .4, 0, 1, 0);
-  chassis.set_turn_constants(6, .28, 0.1, 2.2, 0);
+  chassis.set_turn_constants(6, .33, 0.1, 2.2, 0);
   chassis.set_swing_constants(12, .3, .001, 2, 15);
 
   // Each exit condition set is in the form of (settle_error, settle_time, timeout).
@@ -362,7 +362,7 @@ void skills_auton(){
   //Travel between Matchload and wall 
   chassis.drive_distance(12);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(100);
+  chassis.drive_distance(97);
   chassis.turn_to_angle(-90);
   Intake2.stop();
 
