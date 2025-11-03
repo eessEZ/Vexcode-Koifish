@@ -243,7 +243,7 @@ void autonomous(void) {
       right_side_9ball_auton();
       break;
     case 5:
-      odom_test();
+      chassis.drive_distance(48);
       break;
     case 6:
       tank_odom_test();

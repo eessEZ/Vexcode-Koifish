@@ -10,16 +10,16 @@
 
 void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
-  chassis.set_drive_constants(10, .67, 0, 1.8, 0); 
+  chassis.set_drive_constants(10, .8, 0, 1.8, 0); 
   chassis.set_heading_constants(1, .4, 0, 1, 0);
-  chassis.set_turn_constants(10, .17, 0, .6, 0);
+  chassis.set_turn_constants(6, .28, 0.1, 2.2, 0);
   chassis.set_swing_constants(12, .3, .001, 2, 15);
 
   // Each exit condition set is in the form of (settle_error, settle_time, timeout).
   // Tighter settle conditions to prevent overshooting
-  chassis.set_drive_exit_conditions(1, 100, 3000);
-  chassis.set_turn_exit_conditions(2, 100, 3000);
-  chassis.set_swing_exit_conditions(1, 100, 3000);
+  chassis.set_drive_exit_conditions(3, 100, 3000);
+  chassis.set_turn_exit_conditions(3, 100, 3000);
+  chassis.set_swing_exit_conditions(3, 100, 3000);
 }
 
 /**
@@ -135,23 +135,22 @@ void left_side_auton(){
   Intake2.stop();
   Intake2.setStopping(hold);
   chassis.turn_to_angle(-30);
-  chassis.drive_max_voltage =4;
+  chassis.drive_max_voltage = 6;
   chassis.drive_distance(15);
   chassis.drive_distance(-3);
   Intake1.stop();
-  Intake2.stop();
-  chassis.turn_max_voltage=6;
-  chassis.drive_max_voltage = 6;
-  chassis.turn_to_angle(45+180);//180 because it's a negative angle
+  Intake2.stop();  
+  chassis.turn_to_angle(50+180);//180 because it's a negative angle
   chassis.drive_distance(-15);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(0.3,sec);
   Intake1.stop();
   Intake2.stop();
+  chassis.drive_max_voltage = 6;
   chassis.drive_distance(50);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(-22);  
+  chassis.drive_distance(-24);  
   chassis.turn_to_angle(180);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
