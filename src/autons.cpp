@@ -351,7 +351,7 @@ void skills_auton(){
   Solenoid.set(true);
   chassis.drive_distance(14.2);
   chassis.drive_distance(-5);
-  chassis.drive_distance(6);
+  chassis.drive_distance(6);  
   wait(1.5,sec);
 
   //Scoring 
@@ -362,11 +362,12 @@ void skills_auton(){
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(4.5,sec);
+  Solenoid.set(false);
 
   //Travel between Matchload and wall 
   chassis.drive_distance(12);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(97);
+  chassis.drive_distance(100);
   chassis.turn_to_angle(-90);
   Intake2.stop();
 
