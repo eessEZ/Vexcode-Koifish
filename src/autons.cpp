@@ -298,7 +298,6 @@ void skills_auton(){
   default_constants();
   
   //chassis.drive_max_voltage = 12;
-  //chassis.turn_to_angle(90);
   
   Solenoid2.set(false);
   chassis.drive_distance(30);
