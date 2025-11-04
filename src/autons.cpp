@@ -292,8 +292,6 @@ void right_side_auton(){
 
 
 
-
-
 void skills_auton(){
   default_constants();
   
@@ -375,7 +373,6 @@ void skills_auton(){
 
   //Scoring 
   chassis.drive_distance(-30.2);
-
   Intake1.spin(reverse, 50, pct);
   wait(0.25, sec);
   Intake1.spin(fwd, 100, pct);
@@ -392,14 +389,12 @@ void skills_auton(){
   //chassis.drive_max_voltage = 4;
   
   chassis.turn_to_angle(90);
-  
   chassis.drive_distance(10.4);
   chassis.drive_distance(-5);
   chassis.drive_distance(5.6, 12, 90, 0, 1, 100, 1000);
   chassis.turn_to_angle(90);
   //chassis.drive_max_voltage= 6;
   wait(1.63,sec);
-
   Intake1.stop();
 
   //Scoring Long Goal
@@ -433,7 +428,6 @@ void skills_auton(){
 
   //Scoring 
   chassis.drive_distance(-30.2);
-
   Intake1.spin(reverse, 50, pct);
   wait(0.25, sec);
   Intake1.spin(fwd, 100, pct);
@@ -441,4 +435,3 @@ void skills_auton(){
   wait(4.5,sec);
 
   }
-
