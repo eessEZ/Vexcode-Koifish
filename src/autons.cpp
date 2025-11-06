@@ -335,7 +335,7 @@ void skills_auton(){
   chassis.turn_to_angle(-90);
   chassis.drive_distance(85);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(12.2);  //11.2 -> 12.2
+  chassis.drive_distance(11.7);  //11.2 -> 12.2 -> 11.7
   chassis.turn_to_angle(-90);
 
   //Matchload #2
@@ -356,10 +356,10 @@ void skills_auton(){
   wait(4.5,sec);
   Solenoid.set(false);
 
-  //Travel between Matchload and wall 
+  //Travel between Matchload and wall (WHICH WALL???? the imaginary one???????)
   chassis.drive_distance(12);
   chassis.turn_to_angle(180);
-  chassis.drive_distance(97);
+  chassis.drive_distance(92);
   chassis.turn_to_angle(-90);
   Intake2.stop();
 
