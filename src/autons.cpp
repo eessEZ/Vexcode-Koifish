@@ -350,11 +350,12 @@ void skills_auton(){
  Intake2.stop();
  chassis.drive_distance(10);
  chassis.turn_to_angle(180);
- chassis.drive_distance(-12);
+ chassis.drive_distance(-13);
+ wait(0.25,sec);
  chassis.turn_to_angle(-90);
  chassis.drive_distance(85);
  chassis.turn_to_angle(180);
- chassis.drive_distance(10.7);  //11.2 -> 12.2
+ chassis.drive_distance(10.825);  //11.2 -> 12.2
  chassis.turn_to_angle(-90);
 
 
@@ -413,7 +414,7 @@ void skills_auton(){
  //same code for left side of field that may or may not work
  chassis.drive_distance(12);
  chassis.turn_to_angle(0);
- chassis.drive_distance(-18);
+ chassis.drive_distance(-32);
  chassis.turn_to_angle(90);
  chassis.drive_distance(85);
  chassis.turn_to_angle(0);
