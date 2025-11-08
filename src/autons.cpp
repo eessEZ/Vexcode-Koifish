@@ -323,7 +323,12 @@ void skills_auton(){
   wait(0.25, sec);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
+<<<<<<< HEAD
   wait(4,sec);
+=======
+  wait(3,sec);
+  chassis.turn_to_angle(90);
+>>>>>>> 48633f11aafb4d30a9f2e291a724fc09e1b3f42b
 
   //Travel between Long Goal and Wall
   Solenoid.set(false);
@@ -331,18 +336,28 @@ void skills_auton(){
   Intake2.stop();
   chassis.drive_distance(10);
   chassis.turn_to_angle(180);
+<<<<<<< HEAD
   chassis.drive_distance(-12);
   chassis.turn_to_angle(-90);
   chassis.drive_distance(85);
   chassis.turn_to_angle(180);
   chassis.drive_distance(10.7);  //11.2 -> 12.2
   chassis.turn_to_angle(-90);
+=======
+  chassis.drive_distance(-13.5);
+  chassis.turn_to_angle(-90);
+  chassis.drive_distance(85);
+  chassis.turn_to_angle(180);
+  chassis.drive_distance(11.2);  //11.2 -> 12.2 -> 11.7
+  chassis.turn_to_angle(-90);      
+>>>>>>> 48633f11aafb4d30a9f2e291a724fc09e1b3f42b
 
   //Matchload #2
   Intake1.spin(fwd, 100, pct);
   Solenoid.set(true);
   chassis.drive_distance(14.2);
   chassis.drive_distance(-5);
+  chassis.turn_to_angle(-90);
   chassis.drive_distance(6);  
   wait(1.5,sec);
 
@@ -405,16 +420,18 @@ void skills_auton(){
 
   //Scoring 
   chassis.drive_distance(-30.2);
+  chassis.turn_to_angle(-90);
 
   Intake1.spin(reverse, 50, pct);
   wait(0.25, sec);
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
-  wait(4.5,sec);
+  wait(2,sec);
   Solenoid.set(false);
   Intake1.stop();
   Intake2.stop();
 
+<<<<<<< HEAD
   //Parking
   chassis.drive_distance(12);
   chassis.turn_to_angle(0);
@@ -422,4 +439,69 @@ void skills_auton(){
   chassis.turn_to_angle(-90);
   chassis.drive_distance(-43);
   
+=======
+  //Travel between Matchload and wall (WHICH WALL???? the imaginary one???????)
+  chassis.drive_distance(12);
+  chassis.turn_to_angle(180);
+  chassis.drive_distance(92);
+  chassis.turn_to_angle(-90);
+  Intake2.stop();
+
+  //Matchload #3
+  Intake1.spin(fwd, 100, pct);
+  Solenoid.set(true);
+  chassis.drive_distance(20.2);
+  chassis.drive_distance(-5);
+  chassis.drive_distance(6);
+  wait(1.5,sec);
+
+  //Scoring 
+  chassis.drive_distance(-30.2);
+  Intake1.spin(reverse, 50, pct);
+  wait(0.25, sec);
+  Intake1.spin(fwd, 100, pct);
+  Intake2.spin(fwd, 100, pct);
+  wait(2,sec);
+
+  //OISHDWQNLKCNNLSIHD this is so sad
+  //same code for left side of field that may or may not work
+
+  //Travel between Long Goal and Wall
+  Solenoid.set(false);
+  Intake1.stop();
+  Intake2.stop();
+  chassis.drive_distance(10);
+  chassis.turn_to_angle(0);
+  chassis.drive_distance(-13.5);
+  chassis.turn_to_angle(90);
+  chassis.drive_distance(85);
+  chassis.turn_to_angle(180);
+  chassis.drive_distance(11.5);  //11.2 -> 12.2 -> 11.7
+  chassis.turn_to_angle(-90);
+
+  //Matchload #4
+  chassis.turn_to_angle(90);
+  Solenoid.set(true);
+  Intake1.spin(fwd, 100, pct);
+
+  //chassis.drive_max_voltage = 4;
+  
+  chassis.turn_to_angle(90);
+  chassis.drive_distance(10.4);
+  chassis.drive_distance(-5);
+  chassis.drive_distance(5.6, 12, 90, 0, 1, 100, 1000);
+  chassis.turn_to_angle(90);
+  //chassis.drive_max_voltage= 6;
+  wait(1.63,sec);
+  Intake1.stop();
+
+  //Scoring Long Goal
+  chassis.drive_distance(-30.2);
+  Intake1.spin(reverse, 50, pct);
+  wait(0.25, sec);
+  Intake1.spin(fwd, 100, pct);
+  Intake2.spin(fwd, 100, pct);
+  wait(2,sec);
+
+>>>>>>> 48633f11aafb4d30a9f2e291a724fc09e1b3f42b
   }
