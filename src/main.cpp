@@ -105,7 +105,7 @@ PORT3,     -PORT4,
 
 );
 
-int current_auton_selection = 1;
+int current_auton_selection = 0;
 bool auto_started = false;
 // Driver state mirrored from Python config
 bool is_tank_drive = true; // Set tank drive as default
