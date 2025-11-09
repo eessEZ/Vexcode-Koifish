@@ -106,6 +106,7 @@ PORT3,     -PORT4,
 );
 
 int current_auton_selection = 0;
+int current_auton_selection = 3;
 bool auto_started = false;
 // Driver state mirrored from Python config
 bool is_tank_drive = true; // Set tank drive as default
@@ -243,8 +244,6 @@ void autonomous(void) {
       right_side_9ball_auton();
       break;
     case 5:
-      chassis.drive_distance(48);
-      break;
     case 6:
       tank_odom_test();
       break;
