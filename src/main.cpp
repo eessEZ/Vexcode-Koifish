@@ -105,7 +105,6 @@ PORT3,     -PORT4,
 
 );
 
-int current_auton_selection = 0;
 int current_auton_selection = 3;
 bool auto_started = false;
 // Driver state mirrored from Python config
@@ -244,6 +243,7 @@ void autonomous(void) {
       right_side_9ball_auton();
       break;
     case 5:
+    break;
     case 6:
       tank_odom_test();
       break;
@@ -386,10 +386,15 @@ void usercontrol(void) {
       }
     }
 
-  // Apply to motors via chassis API (convert percent to volts)
+  // Apply to motors individually for smooth direct control
   float leftVolt = to_volt((float)left_speed);
   float rightVolt = to_volt((float)right_speed);
-  chassis.drive_with_voltage(leftVolt, rightVolt);
+  LeftFront.spin(fwd, leftVolt, volt);
+  LeftMiddle.spin(fwd, leftVolt, volt);
+  LeftBack.spin(fwd, leftVolt, volt);
+  RightFront.spin(fwd, rightVolt, volt);
+  RightMiddle.spin(fwd, rightVolt, volt);
+  RightBack.spin(fwd, rightVolt, volt);
 
     // === Pneumatics toggle (L2) ===
     bool pneu_press = Controller1.ButtonL2.pressing();

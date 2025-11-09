@@ -349,10 +349,12 @@ void skills_auton(){
  Intake1.stop();
  Intake2.stop();
  chassis.drive_distance(10);
- chassis.turn_to_angle(180);
- chassis.drive_distance(-13);
- wait(0.25,sec);
+ 
+ // First, turn to angle 0 (in place)
+ chassis.turn_to_angle(0);
+ chassis.drive_distance(10);
  chassis.turn_to_angle(-90);
+ wait(0.25,sec);
  chassis.drive_distance(85);
  chassis.turn_to_angle(180);
  chassis.drive_distance(10.825);  //11.2 -> 12.2
