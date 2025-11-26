@@ -1,3 +1,4 @@
+// <<<<<<< Updated upstream
 #include "vex.h"
 
 /**
@@ -331,7 +332,7 @@ void skills_auton(){
  chassis.drive_distance(5.6, 12, 90, 0, 1, 100, 1000);
  chassis.turn_to_angle(90);
  //chassis.drive_max_voltage= 6;
- wait(1.63,sec);
+ wait(1.63, sec);
  Intake1.stop();
 
 
@@ -341,7 +342,7 @@ void skills_auton(){
  wait(0.25, sec);
  Intake1.spin(fwd, 100, pct);
  Intake2.spin(fwd, 100, pct);
- wait(4,sec);
+ wait(4, sec);
 
 
  //Travel between Long Goal and Wall
@@ -454,5 +455,5 @@ void skills_auton(){
  chassis.drive_distance(48);
  chassis.turn_to_angle(-90);
  chassis.drive_distance(-43);
-
 }
+

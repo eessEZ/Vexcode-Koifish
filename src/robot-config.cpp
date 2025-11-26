@@ -21,7 +21,7 @@ motor RightBack = motor(PORT20, ratio6_1, false);
 
 // Intake motors
 motor Intake1 = motor(PORT8, ratio6_1, false);
-motor Intake2 = motor(PORT18, ratio6_1, false);
+motor Intake2 = motor(PORT19, ratio6_1, false);
 
 // Inertial sensor
 inertial InertialSensor = inertial(PORT21);
