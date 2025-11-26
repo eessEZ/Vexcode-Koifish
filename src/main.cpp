@@ -1,4 +1,5 @@
 #include "vex.h"
+#include "robot-config.h"
 
 using namespace vex;
 competition Competition;
@@ -291,21 +292,22 @@ void usercontrol(void) {
 
     // === Intake Control ===
     if (Controller1.ButtonR1.pressing()){
-      Intake1.spin(fwd, 100, pct);
-      Intake2.spin(fwd, 100, pct);
+      // Intake1.spin(fwd, 100, pct);
+      // Intake2.spin(fwd, 100, pct);
       Intake2.setStopping(coast);
     } else if (Controller1.ButtonR2.pressing()){
       // intake1 forward only
-      Intake1.spin(fwd, 100, pct);
-      Intake2.stop();
+      // Intake1.spin(fwd, 100, pct);
+      // Intake2.stop();
       Intake2.setStopping(hold);
     } else if (Controller1.ButtonL1.pressing()){
-      Intake1.spin(reverse, 100, pct);
-      Intake2.spin(reverse, 100, pct);
+      // Intake1.spin(reverse, 100, pct);
+      // Intake2.spin(reverse, 100, pct);
       Intake2.setStopping(coast);
     } else {
-      Intake1.stop();
-      Intake2.stop();
+      // Intake1.stop();
+      // Intake2.stop();
+      Intake1.setStopping(coast);
       Intake2.setStopping(coast);
     }
 
