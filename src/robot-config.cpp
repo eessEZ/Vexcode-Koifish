@@ -11,8 +11,8 @@ brain  Brain;
 controller Controller1 = controller(primary);
 
 // Drive motors (matching koifish.v5python)
-motor LeftFront = motor(PORT1, ratio6_1, true);
-motor LeftMiddle = motor(PORT2, ratio6_1, true);
+motor LeftFront = motor(PORT2, ratio6_1, true);
+motor LeftMiddle = motor(PORT1, ratio6_1, true);
 motor LeftBack = motor(PORT11, ratio6_1, true);
 
 motor RightFront = motor(PORT9, ratio6_1, false);
@@ -20,11 +20,11 @@ motor RightMiddle = motor(PORT10, ratio6_1, false);
 motor RightBack = motor(PORT20, ratio6_1, false);
 
 // Intake motors
-motor Intake1 = motor(PORT7, ratio6_1, false);
-motor Intake2 = motor(PORT8, ratio6_1, false);
+motor Intake1 = motor(PORT8, ratio6_1, false);
+motor Intake2 = motor(PORT18, ratio6_1, false);
 
 // Inertial sensor
-inertial InertialSensor = inertial(PORT16);
+inertial InertialSensor = inertial(PORT21);
 
 // Pneumatics - solenoid on brain three-wire port H
 digital_out Solenoid = digital_out(Brain.ThreeWirePort.H);
