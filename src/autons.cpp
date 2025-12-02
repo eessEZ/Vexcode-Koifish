@@ -138,11 +138,11 @@ void left_side_auton(){
   chassis.drive_max_voltage = 6;
   chassis.drive_distance(15);
   chassis.drive_distance(-1);
+  chassis.turn_to_angle(45+180);
+  
   Intake1.stop();
-  Intake2.stop();  
-  chassis.turn_to_angle(45+180);//180 because it's a negative angle
+  Intake2.stop();  //180 because it's a negative angle
   chassis.drive_distance(-15);
-  Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(0.3,sec);
   Intake1.stop();
@@ -185,6 +185,7 @@ void left_side_auton(){
   chassis.drive_distance(-10);
   
   chassis.drive_distance(5);
+
 }
 
 void right_side_9ball_auton(){
@@ -352,8 +353,13 @@ void skills_auton(){
  
  // First, turn to angle 0 (in place)
  chassis.turn_to_angle(0);
- chassis.drive_distance(10);
- chassis.turn_to_angle(-90);
+ 
+ // Smooth curved drive with horizontal movement: forward 10 inches and left 13 inches while turning to -90
+ // Usage: chassis.smooth_curve_xy(forward_distance, horizontal_distance, target_angle, heading_kp, drive_kp, max_drive_voltage, max_heading_voltage)
+ // horizontal_distance: positive = right, negative = left
+ // Example: chassis.smooth_curve_xy(10.0, -13.0, -90.0) = drive 10" forward, 13" left, end at -90°
+ chassis.smooth_curve_xy(10.0, -13.0, -90.0, 0.7, 0.8, 6.0, 2.0);
+ chassis.drive_distance(-13);
  wait(0.25,sec);
  chassis.drive_distance(85);
  chassis.turn_to_angle(180);
