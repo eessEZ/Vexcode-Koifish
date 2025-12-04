@@ -75,7 +75,7 @@ int SidewaysTracker_port, float SidewaysTracker_diameter, float SidewaysTracker_
 void Drive::drive_with_voltage(float leftVoltage, float rightVoltage){
   // Reduce left side by 5% in autonomous mode to compensate for drift
   if (is_auton_mode) {
-    leftVoltage *= 1.02;  // 5% reduction
+    leftVoltage *= 0.98;  // 5% reduction
   }
   DriveL.spin(fwd, leftVoltage, volt);
   DriveR.spin(fwd, rightVoltage,volt);
