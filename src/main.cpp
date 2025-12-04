@@ -50,7 +50,7 @@ motor_group(LeftFront, LeftMiddle, LeftBack),
 motor_group(RightFront, RightMiddle, RightBack),
 
 //Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e. "PORT1", not simply "1"):
-PORT12,
+PORT14,
 
 //Input your wheel diameter. (4" omnis are actually closer to 4.125"):
 3.25,
@@ -210,6 +210,9 @@ void pre_auton() {
 void autonomous(void) {
   auto_started = true;
   
+  // Enable auton mode (reduces left side by 5% to compensate for drift)
+  chassis.set_auton_mode(true);
+  
   // Set drive motors to HOLD mode for precise autonomous movements
   LeftFront.setStopping(hold);
   LeftMiddle.setStopping(hold);
@@ -232,8 +235,7 @@ void autonomous(void) {
 
     case 2:
       {
-        chassis.drive_distance(24);
-
+        chassis.turn_to_angle(180);
       }
       break;
     case 3:
@@ -243,8 +245,7 @@ void autonomous(void) {
       right_side_9ball_auton();
       break;
     case 5:
-      
-    chassis.smooth_curve_xy(10.0, 10.0, -90.0, 0.7, 0.6, 6.0, 3.0);
+      chassis.drive_distance(48);
       break;
     case 6:
       tank_odom_test();
@@ -266,6 +267,9 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
+  // Disable auton mode (normal operation for driver control)
+  chassis.set_auton_mode(false);
+  
   // Set drive motors back to COAST mode for smooth user control
   LeftFront.setStopping(coast);
   LeftMiddle.setStopping(coast);
@@ -292,6 +296,7 @@ void usercontrol(void) {
     // ........................................................................
 
     // === Intake Control ===
+      
     if (Controller1.ButtonR1.pressing()){
       Intake1.spin(fwd, 100, pct);
       Intake2.spin(fwd, 100, pct);

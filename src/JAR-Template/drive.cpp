@@ -42,6 +42,7 @@ int SidewaysTracker_port, float SidewaysTracker_diameter, float SidewaysTracker_
   SidewaysTracker_in_to_deg_ratio(M_PI*SidewaysTracker_diameter/360.0),
   drive_setup(drive_setup),
   driver_scale(1.0),
+  is_auton_mode(false),
   DriveL(DriveL),
   DriveR(DriveR),
   Gyro(inertial(gyro_port)),
@@ -72,6 +73,10 @@ int SidewaysTracker_port, float SidewaysTracker_diameter, float SidewaysTracker_
  */
 
 void Drive::drive_with_voltage(float leftVoltage, float rightVoltage){
+  // Reduce left side by 5% in autonomous mode to compensate for drift
+  if (is_auton_mode) {
+    leftVoltage *= 1.02;  // 5% reduction
+  }
   DriveL.spin(fwd, leftVoltage, volt);
   DriveR.spin(fwd, rightVoltage,volt);
 }
@@ -729,6 +734,10 @@ void Drive::set_driver_scale(float scale){
   driver_scale = scale;
 }
 
+void Drive::set_auton_mode(bool is_auton){
+  is_auton_mode = is_auton;
+}
+
 /**
  * Tracking task to run in the background.
  */
@@ -736,217 +745,4 @@ void Drive::set_driver_scale(float scale){
 int Drive::position_track_task(){
   chassis.position_track();
   return(0);
-}
-
-/**
- * Smooth curved drive: drives forward a distance while gradually turning to a target angle.
- * Creates a smooth arc path instead of a sharp turn.
- * 
- * Variables affecting the turn:
- * - heading_kp: Proportional gain for heading correction (higher = sharper turn, default 0.7)
- * - drive_kp: Proportional gain for forward movement (higher = faster forward, default 0.8)
- * - max_drive_voltage: Maximum forward speed in volts (default 6.0)
- * - max_heading_voltage: Maximum turning power in volts (higher = sharper turn, default 2.0)
- * - distance: How far to drive forward during the curve
- * - target_angle: The angle to turn to (in degrees)
- * 
- * @param distance Distance to drive forward in inches.
- * @param target_angle Target heading angle in degrees.
- */
-void Drive::smooth_curve(float distance, float target_angle){
-  smooth_curve(distance, target_angle, 0.7, 0.8, 6.0, 2.0);
-}
-
-void Drive::smooth_curve(float distance, float target_angle, float heading_kp, float drive_kp, float max_drive_voltage, float max_heading_voltage){
-  float start_left = get_left_position_in();
-  float start_right = get_right_position_in();
-  int timeout = 3000;
-  int start_time = Brain.timer(msec);
-  
-  while ((Brain.timer(msec) - start_time) < timeout) {
-    float current_heading = get_absolute_heading();
-    float heading_error = target_angle - current_heading;
-    // Normalize error to -180 to 180 range
-    heading_error = reduce_negative_180_to_180(heading_error);
-    
-    // Calculate distance traveled
-    float avg_distance = ((get_left_position_in() - start_left) + 
-                         (get_right_position_in() - start_right)) / 2.0;
-    float distance_error = distance - avg_distance;
-    
-    // Calculate outputs
-    float drive_output = distance_error * drive_kp;
-    float heading_output = heading_error * heading_kp;
-    
-    // Clamp outputs
-    drive_output = clamp(drive_output, -max_drive_voltage, max_drive_voltage);
-    heading_output = clamp(heading_output, -max_heading_voltage, max_heading_voltage);
-    
-    // Apply to motors: drive + heading correction creates smooth curve
-    // Left turn: left motors slower (drive_output + heading_output), right motors faster (drive_output - heading_output)
-    float left_voltage = drive_output + heading_output;
-    float right_voltage = drive_output - heading_output;
-    
-    drive_with_voltage(left_voltage, right_voltage);
-    
-    // Exit when close to target angle and distance
-    if (fabs(heading_error) < 5.0 && fabs(distance_error) < 2.0) {
-      break;
-    }
-    task::sleep(10);
-  }
-  // Stop all motors
-  drive_stop(hold);
-}
-
-/**
- * Smooth curved drive with horizontal displacement: drives while turning to achieve both forward and horizontal movement.
- * Uses odometry to track horizontal displacement and adjusts the curve accordingly.
- * 
- * @param forward_distance Distance to drive forward in inches.
- * @param horizontal_distance Horizontal displacement in inches (positive = right, negative = left).
- * @param target_angle Target heading angle in degrees.
- */
-void Drive::smooth_curve_xy(float forward_distance, float horizontal_distance, float target_angle){
-  smooth_curve_xy(forward_distance, horizontal_distance, target_angle, 0.7, 0.8, 6.0, 2.0);
-}
-
-void Drive::smooth_curve_xy(float forward_distance, float horizontal_distance, float target_angle, float heading_kp, float drive_kp, float max_drive_voltage, float max_heading_voltage){
-  float start_left = get_left_position_in();
-  float start_right = get_right_position_in();
-  float start_heading = get_absolute_heading();
-  
-  // Calculate the total distance needed to achieve both forward and horizontal movement
-  float total_distance = sqrt(forward_distance * forward_distance + horizontal_distance * horizontal_distance);
-  
-  // Smooth interpolation - use cubic ease-in-out for gradual, smooth transitions
-  // This prevents sudden changes that cause motor acceleration spikes
-  
-  int timeout = 3000;
-  int start_time = Brain.timer(msec);
-  int settle_count = 0;
-  float prev_heading_output = 0.0;  // For smoothing
-  
-  while ((Brain.timer(msec) - start_time) < timeout) {
-    float current_heading = get_absolute_heading();
-    
-    // Calculate distance traveled
-    float avg_distance = ((get_left_position_in() - start_left) + 
-                         (get_right_position_in() - start_right)) / 2.0;
-    float distance_error = total_distance - avg_distance;
-    
-    // Calculate progress (0 to 1)
-    float progress = avg_distance / total_distance;
-    progress = clamp(progress, 0.0, 1.0);
-    
-    // Use smooth cubic interpolation (ease-in-out)
-    // This creates a smooth S-curve: slow start, fast middle, slow end
-    float turn_progress;
-    if (progress < 0.5) {
-      turn_progress = 4.0 * progress * progress * progress;  // Ease in
-    } else {
-      float t = 2.0 * progress - 1.0;
-      turn_progress = 1.0 - pow(-2.0 * progress + 2.0, 3.0) / 2.0;  // Ease out
-    }
-    
-    // Smoothly interpolate from start heading to target angle
-    float angle_diff = target_angle - start_heading;
-    angle_diff = reduce_negative_180_to_180(angle_diff);
-    float current_target_angle = start_heading + angle_diff * turn_progress;
-    
-    // Normalize target angle
-    current_target_angle = reduce_negative_180_to_180(current_target_angle);
-    if (current_target_angle < 0) current_target_angle += 360.0;
-    
-    float heading_error = current_target_angle - current_heading;
-    heading_error = reduce_negative_180_to_180(heading_error);
-    
-    // Calculate outputs using user-provided gains
-    // Use a more stable calculation that prevents speed from dropping too low
-    float drive_output = distance_error * drive_kp;
-    float heading_output = heading_error * heading_kp;
-    
-    // Better speed management to prevent end-of-curve problems
-    // Keep speed more consistent throughout, especially near the end
-    
-    // Calculate a smoother speed profile
-    float speed_factor = 1.0;
-    if (distance_error < total_distance * 0.3) {
-      // In the last 30% of movement, maintain higher minimum speed
-      float remaining_ratio = distance_error / (total_distance * 0.3);
-      speed_factor = 0.7 + 0.3 * remaining_ratio;  // 70% to 100% speed
-    }
-    
-    // Apply speed factor
-    drive_output *= speed_factor;
-    
-    // Set minimum drive speed that increases as we get closer (prevents stalling)
-    float min_drive_speed;
-    if (distance_error > 4.0) {
-      min_drive_speed = 2.5;  // Normal minimum
-    } else if (distance_error > 2.0) {
-      min_drive_speed = 2.0;  // Slightly lower when close
-    } else {
-      min_drive_speed = 1.5;  // Lower when very close, but not zero
-    }
-    
-    // Apply minimum speed
-    if (distance_error > 0.5 && drive_output < min_drive_speed && drive_output > 0) {
-      drive_output = min_drive_speed;
-    }
-    
-    // When very close (last inch), allow it to slow down more for precision
-    if (distance_error < 1.0) {
-      drive_output = distance_error * drive_kp * 0.8;  // Slower but still moving
-      if (drive_output < 0.8) drive_output = 0.8;  // Absolute minimum
-    }
-    
-    // Smooth the heading output to prevent sudden motor changes
-    // Use exponential smoothing (80% new, 20% old) - less smoothing for more responsiveness
-    heading_output = heading_output * 0.8 + prev_heading_output * 0.2;
-    prev_heading_output = heading_output;
-    
-    // Less aggressive deadband - only reduce when very close
-    // This prevents the speed from dropping too much
-    if (fabs(heading_error) < 3.0) {
-      float deadband_factor = 0.7 + 0.3 * (fabs(heading_error) / 3.0);  // Less aggressive (70% min)
-      heading_output *= deadband_factor;
-    }
-    
-    // Prevent drive output from going too low when heading error is large
-    // This keeps the robot moving even when correcting heading
-    if (fabs(heading_error) > 10.0 && fabs(drive_output) < 3.0 && distance_error > 2.0) {
-      drive_output = (drive_output > 0) ? 3.0 : -3.0;  // Maintain minimum speed
-    }
-    
-    // Clamp outputs
-    drive_output = clamp(drive_output, -max_drive_voltage, max_drive_voltage);
-    heading_output = clamp(heading_output, -max_heading_voltage, max_heading_voltage);
-    
-    // Apply to motors: drive + heading correction creates smooth curve
-    float left_voltage = drive_output + heading_output;
-    float right_voltage = drive_output - heading_output;
-    
-    drive_with_voltage(left_voltage, right_voltage);
-    
-    // Exit when settled - use tighter conditions to prevent overshoot
-    // Exit earlier to prevent the slowdown-overshoot cycle
-    if (fabs(heading_error) < 4.0 && fabs(distance_error) < 1.5) {
-      settle_count++;
-      if (settle_count > 10) {  // Settled for 100ms (faster exit)
-        break;
-      }
-    } else if (fabs(distance_error) < 0.5 && fabs(heading_error) < 6.0) {
-      // Very close to distance target, exit even if heading isn't perfect
-      settle_count++;
-      if (settle_count > 5) {
-        break;
-      }
-    } else {
-      settle_count = 0;
-    }
-    task::sleep(10);
-  }
-  // Stop all motors
-  drive_stop(hold);
 }

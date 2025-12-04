@@ -156,25 +156,8 @@ public:
   // Driver input scaling (0.0 - 1.0). Used by control_* methods to scale joystick inputs.
   void set_driver_scale(float scale);
   float driver_scale;
-
-  /**
-   * Smooth curved drive: drives forward a distance while gradually turning to a target angle.
-   * Creates a smooth arc path instead of a sharp turn.
-   * 
-   * @param distance Distance to drive forward in inches.
-   * @param target_angle Target heading angle in degrees.
-   */
-  void smooth_curve(float distance, float target_angle);
-  void smooth_curve(float distance, float target_angle, float heading_kp, float drive_kp, float max_drive_voltage, float max_heading_voltage);
   
-  /**
-   * Smooth curved drive with horizontal displacement: drives while turning to achieve both forward and horizontal movement.
-   * Creates a smooth arc that moves both forward and sideways.
-   * 
-   * @param forward_distance Distance to drive forward in inches.
-   * @param horizontal_distance Horizontal displacement in inches (positive = right, negative = left).
-   * @param target_angle Target heading angle in degrees.
-   */
-  void smooth_curve_xy(float forward_distance, float horizontal_distance, float target_angle);
-  void smooth_curve_xy(float forward_distance, float horizontal_distance, float target_angle, float heading_kp, float drive_kp, float max_drive_voltage, float max_heading_voltage);
+  // Set autonomous mode (reduces left side by 5% to compensate for drift)
+  void set_auton_mode(bool is_auton);
+  bool is_auton_mode;
 };

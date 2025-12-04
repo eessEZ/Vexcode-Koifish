@@ -10,16 +10,22 @@
 
 void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
-  chassis.set_drive_constants(10, .8, 0, 1.8, 0); 
-  chassis.set_heading_constants(1, .4, 0, 1, 0);
-  chassis.set_turn_constants(6, .34, 0.1, 2.1, 0);
-  chassis.set_swing_constants(12, .3, .001, 2, 15);
+  // SUPER LOW constants for new robot - start conservative and tune up
+  chassis.set_drive_constants(
+    6,          // slew
+    0.6,       // P  (lower acceleration)
+    0.0002,     // I  (stronger “finish the target” force)
+    0.2,       // D  (much weaker braking)
+    0           // start I
+);
+  chassis.set_heading_constants(1, .2, 0, .5, 0);  // Reduced: 0.2 kP, 0.5 kD
+  chassis.set_turn_constants(6, .25, 0, 1.30, 15);  // Reduced: 6V max, 0.15 kP, 1.0 kD
 
   // Each exit condition set is in the form of (settle_error, settle_time, timeout).
-  // Tighter settle conditions to prevent overshooting
-  chassis.set_drive_exit_conditions(3, 100, 3000);
-  chassis.set_turn_exit_conditions(6, 100, 3000);
-  chassis.set_swing_exit_conditions(3, 100, 3000);
+  // Looser settle conditions for new robot (more forgiving)
+  chassis.set_drive_exit_conditions(5, 150, 4000);  // 5" error, 150ms settle, 4s timeout
+  chassis.set_turn_exit_conditions(8, 150, 4000);  // 8° error, 150ms settle, 4s timeout
+  chassis.set_swing_exit_conditions(5, 150, 4000);  // 5° error, 150ms settle, 4s timeout
 }
 
 /**
@@ -130,25 +136,25 @@ void holonomic_odom_test(){
 }
 
 void left_side_auton(){
-  chassis.drive_distance(13);
+  chassis.drive_distance(16);
   Intake1.spin(fwd, 100, pct);
   Intake2.stop();
   Intake2.setStopping(hold);
   chassis.turn_to_angle(-30);
-  chassis.drive_max_voltage = 6;
-  chassis.drive_distance(15);
+  chassis.drive_max_voltage = 4;
+  chassis.drive_distance(20);
   chassis.drive_distance(-1);
   chassis.turn_to_angle(45+180);
   
   Intake1.stop();
   Intake2.stop();  //180 because it's a negative angle
-  chassis.drive_distance(-15);
+  chassis.drive_distance(-20);
   Intake2.spin(fwd, 100, pct);
-  wait(0.3,sec);
+  wait(0.5,sec);
   Intake1.stop();
   Intake2.stop();
   chassis.drive_max_voltage = 6;
-  chassis.drive_distance(50.5);
+  chassis.drive_distance(55.5);
   chassis.turn_to_angle(180);
   chassis.drive_distance(-22.5);  
   chassis.turn_to_angle(180);
@@ -354,11 +360,8 @@ void skills_auton(){
  // First, turn to angle 0 (in place)
  chassis.turn_to_angle(0);
  
- // Smooth curved drive with horizontal movement: forward 10 inches and left 13 inches while turning to -90
- // Usage: chassis.smooth_curve_xy(forward_distance, horizontal_distance, target_angle, heading_kp, drive_kp, max_drive_voltage, max_heading_voltage)
- // horizontal_distance: positive = right, negative = left
- // Example: chassis.smooth_curve_xy(10.0, -13.0, -90.0) = drive 10" forward, 13" left, end at -90°
- chassis.smooth_curve_xy(10.0, -13.0, -90.0, 0.7, 0.8, 6.0, 2.0);
+ // Drive forward and turn
+ chassis.drive_distance(10, -90);
  chassis.drive_distance(-13);
  wait(0.25,sec);
  chassis.drive_distance(85);
