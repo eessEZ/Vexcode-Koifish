@@ -50,7 +50,7 @@ motor_group(LeftFront, LeftMiddle, LeftBack),
 motor_group(RightFront, RightMiddle, RightBack),
 
 //Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e. "PORT1", not simply "1"):
-PORT16,
+PORT14,
 
 //Input your wheel diameter. (4" omnis are actually closer to 4.125"):
 3.25,
@@ -105,7 +105,7 @@ PORT3,     -PORT4,
 
 );
 
-int current_auton_selection = 1;
+int current_auton_selection = 3;
 bool auto_started = false;
 // Driver state mirrored from Python config
 bool is_tank_drive = true; // Set tank drive as default
@@ -195,7 +195,7 @@ void pre_auton() {
       while(Brain.Screen.pressing()) {}
       current_auton_selection ++;
     } else if (current_auton_selection == 8){
-      current_auton_selection = 3;
+      current_auton_selection = 0;    //THIS IS NOT WHERE U CHNAGE IT IT LIES TO YOU AND IT WILL GASLIGHT YOU AND WASTE UR LIFE AWAY change it at line 108 fuck u gay gya 
     }
     wait(10, msec);
   }
