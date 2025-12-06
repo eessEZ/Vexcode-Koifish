@@ -141,20 +141,21 @@ void left_side_auton(){
   Intake2.stop();
   Intake2.setStopping(hold);
   chassis.turn_to_angle(-30);
-  chassis.drive_max_voltage = 4;
-  chassis.drive_distance(20);
-  chassis.drive_distance(-1);
+  chassis.drive_max_voltage = 3;
+  chassis.drive_distance(15);
+  chassis.drive_distance(-2);
   chassis.turn_to_angle(45+180);
+  chassis.drive_max_voltage = 6;
   
   Intake1.stop();
   Intake2.stop();  //180 because it's a negative angle
-  chassis.drive_distance(-20);
+  chassis.drive_distance(-15);
   Intake2.spin(fwd, 100, pct);
-  wait(0.5,sec);
+  wait(0.2,sec);
   Intake1.stop();
   Intake2.stop();
-  chassis.drive_max_voltage = 6;
-  chassis.drive_distance(55.5);
+  chassis.drive_max_voltage = 7;
+  chassis.drive_distance(47);
   chassis.turn_to_angle(180);
   chassis.drive_distance(-22.5);  
   chassis.turn_to_angle(180);
@@ -174,7 +175,7 @@ void left_side_auton(){
   chassis.drive_distance(31);
   chassis.turn_to_angle(180);
   chassis.drive_max_voltage = 8;
-  wait(0.4,sec);
+  wait(0.3,sec);
   Intake1.stop();
   //drive back
   
@@ -185,13 +186,15 @@ void left_side_auton(){
   Intake1.spin(fwd, 100, pct);
   Intake2.spin(fwd, 100, pct);
   wait(2,sec);
-  chassis.drive_distance(10);
-  
-  chassis.drive_max_voltage = 100;
-  chassis.drive_distance(-10);
-  
-  chassis.drive_distance(5);
+ Solenoid2.set(true);
+ //chassis.drive_distance(10);
+ //chassis.turn_to_angle(-90);
+ //chassis.drive_distance(11.5);
+ 
+ //chassis.turn_to_angle(180);
+ //chassis.drive_distance(-24);
 
+  
 }
 
 void right_side_9ball_auton(){
@@ -282,6 +285,7 @@ void right_side_auton(){
   chassis.drive_max_voltage = 8;
   wait(0.4,sec);
   Intake1.stop();
+  
   //drive back
   chassis.drive_distance(-29.5);
   // Deactivate pneumatics
@@ -311,8 +315,50 @@ void right_side_auton(){
 */
 
 
+void right_side_dumbass4ball_auton(){
+
+  Solenoid2.set(false);
+ chassis.drive_distance(30.5);
 
 
+ //Matchloader Pt.1
+ chassis.turn_to_angle(90);
+ Solenoid.set(true);
+ Intake1.spin(fwd, 100, pct);
+
+
+ //chassis.drive_max_voltage = 4;
+ //Matchloader Pt.2
+ chassis.turn_to_angle(90);
+  chassis.drive_distance(11);
+  wait(0.4,sec);
+ chassis.turn_to_angle(92);
+ //chassis.drive_max_voltage= 6;
+ Intake1.stop();
+ chassis.drive_distance(-30);
+ Intake1.spin(reverse, 50, pct);
+ wait(0.25,sec);
+ Intake1.spin(fwd, 100, pct);
+ Intake2.spin(fwd, 100, pct);
+
+ Solenoid.set(false);
+ 
+ wait(2.5,sec);
+
+ Solenoid2.set(true);
+ chassis.drive_distance(10);
+ chassis.turn_to_angle(180);
+ chassis.drive_distance(11.5);
+ 
+ chassis.turn_to_angle(90);
+ chassis.drive_distance(-24);
+
+
+
+
+ //Travel between Long Goal and Wall
+ Solenoid.set(false);
+}
 
 
 
@@ -463,5 +509,9 @@ void skills_auton(){
  chassis.drive_distance(48);
  chassis.turn_to_angle(-90);
  chassis.drive_distance(-43);
+
+}
+
+void left_side_sped_auton(){
 
 }

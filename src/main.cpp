@@ -50,7 +50,7 @@ motor_group(LeftFront, LeftMiddle, LeftBack),
 motor_group(RightFront, RightMiddle, RightBack),
 
 //Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e. "PORT1", not simply "1"):
-PORT14,
+PORT16,
 
 //Input your wheel diameter. (4" omnis are actually closer to 4.125"):
 3.25,
@@ -62,7 +62,7 @@ PORT14,
 
 //Gyro scale, this is what your gyro reads when you spin the robot 360 degrees.
 //For most cases 360 will do fine here, but this scale factor can be very helpful when precision is necessary.
-359,
+358.5,
 
 /*---------------------------------------------------------------------------*/
 /*                                  PAUSE!                                   */
@@ -133,7 +133,7 @@ void pre_auton() {
   
   // IMMEDIATELY retract pneumatics when program starts
   Solenoid.set(false);        // Force Port H pneumatics retracted
-  Solenoid2.set(true);        // Force Port A pneumatics ON by default
+  Solenoid2.set(true);        // Force Port A pneumatics ON by defafult
   wait(50, msec);             // Brief delay to ensure command processes
   
   // Calibrate gyro sensor
@@ -143,6 +143,7 @@ void pre_auton() {
   }
   wait(500, msec);
   
+
   default_constants();
   
   // Initialize pneumatics to retracted position (safety default)
@@ -194,7 +195,7 @@ void pre_auton() {
       while(Brain.Screen.pressing()) {}
       current_auton_selection ++;
     } else if (current_auton_selection == 8){
-      current_auton_selection = 0;
+      current_auton_selection = 3;
     }
     wait(10, msec);
   }
@@ -235,7 +236,7 @@ void autonomous(void) {
 
     case 2:
       {
-        chassis.turn_to_angle(180);
+        right_side_dumbass4ball_auton();
       }
       break;
     case 3:
@@ -245,7 +246,7 @@ void autonomous(void) {
       right_side_9ball_auton();
       break;
     case 5:
-      chassis.drive_distance(48);
+      left_side_sped_auton();
       break;
     case 6:
       tank_odom_test();

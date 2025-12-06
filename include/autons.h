@@ -18,3 +18,5 @@ void right_side_auton();
 void right_side_9ball_auton();
 void left_side_auton();
 void skills_auton();
+void right_side_dumbass4ball_auton();
+void left_side_sped_auton();
