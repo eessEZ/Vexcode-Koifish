@@ -385,7 +385,7 @@ void skills_auton(){
  chassis.drive_distance(5.75, 12, 90, 0, 1, 100, 1000);
  chassis.turn_to_angle(90);
  //chassis.drive_max_voltage= 6;
- wait(1.63,sec);
+ wait(1.6,sec);
  Intake1.stop();
 
  //Scoring Long Goal
@@ -409,26 +409,26 @@ void skills_auton(){
  chassis.turn_to_angle(0);
  
  // Drive forward and turn
- chassis.drive_distance(13.5);
+ chassis.drive_distance(13);
  chassis.turn_to_angle(-90);
- chassis.drive_distance(85);
+ chassis.drive_distance(82, 270);
  chassis.turn_to_angle(180);
- chassis.drive_distance(12.5);  //11.2 -> 12.2
+ chassis.drive_distance(12);  //11.2 -> 12.2
  chassis.turn_to_angle(-90);
 
  //uhhh new failing stuff
- chassis.drive_distance(-16);
- Intake1.spin(reverse, 50, pct);
+ chassis.drive_distance(-14.25);
+ Intake1.spin(reverse, 75, pct);
  wait(0.25, sec);
  Intake1.spin(fwd, 100, pct);
  Intake2.spin(fwd, 100, pct);
- wait(4,sec);
+ wait(2.75,sec);
 
  //Matchload #2
  Intake1.spin(fwd, 100, pct);
  Intake2.stop();
  Solenoid.set(true);
- chassis.drive_distance(30.4);
+ chassis.drive_distance(31.4);
  chassis.drive_distance(-5);
  chassis.drive_distance(6.1); 
  wait(1.5,sec);
@@ -436,23 +436,23 @@ void skills_auton(){
 
  //Scoring
  chassis.turn_to_angle(-90);
- chassis.drive_distance(-31.2);
+ chassis.drive_distance(-31.75);
 
 
- Intake1.spin(reverse, 50, pct);
+ Intake1.spin(reverse, 75, pct);
  wait(0.25, sec);
  Intake1.spin(fwd, 100, pct);
  Intake2.spin(fwd, 100, pct);
- wait(2.25,sec);
+ wait(2.75,sec);
  Solenoid.set(false);
  Intake1.stop();
  Intake2.stop();
 
 
- //Travel between left side long goal and wall
+ //Travel between left side long goal and right side long goal
  chassis.drive_distance(12);
  chassis.turn_to_angle(180);
- chassis.drive_distance(96.5);
+ chassis.drive_distance(95, 180);
  chassis.turn_to_angle(-90);
  Intake2.stop();
 
@@ -460,64 +460,67 @@ void skills_auton(){
  //Matchload #3
  Intake1.spin(fwd, 100, pct);
  Solenoid.set(true);
- chassis.drive_distance(19);
+ chassis.drive_distance(20);
  chassis.drive_distance(-5);
  chassis.drive_distance(6);
  wait(1.5,sec);
 
+//Travel between Long Goal and Wall
+Solenoid.set(false);
+Intake1.stop();
+Intake2.stop();
+chassis.drive_distance(-20.2);
 
- //Scoring
- chassis.turn_to_angle(-90);
- chassis.drive_distance(-30.2);
- Solenoid.set(false);
- Intake1.spin(reverse, 50, pct);
- wait(0.25, sec);
- Intake1.spin(fwd, 100, pct);
- Intake2.spin(fwd, 100, pct);
- wait(4.5,sec);
+// First, turn to angle 0 (in place)
+chassis.turn_to_angle(180);
 
+// Drive forward and turn
+chassis.drive_distance(13);
+chassis.turn_to_angle(90);
+chassis.drive_distance(82);
+chassis.turn_to_angle(0);
+chassis.drive_distance(13.25);  //11.2 -> 12.2
+chassis.turn_to_angle(90);
 
- //same code for left side of field that may or may not work
- chassis.drive_distance(12);
- chassis.turn_to_angle(0);
- chassis.drive_distance(-32);
- chassis.turn_to_angle(90);
- chassis.drive_distance(85);
- chassis.turn_to_angle(0);
- chassis.drive_distance(15);  //11.2 -> 12.2
- chassis.turn_to_angle(90);
+//uhhh new failing stuff
+chassis.drive_distance(-14.25);
+Intake1.spin(reverse, 75, pct);
+wait(0.25, sec);
+Intake1.spin(fwd, 100, pct);
+Intake2.spin(fwd, 100, pct);
+wait(2.75,sec);
 
-
- //Matchload #4
- Intake1.spin(fwd, 100, pct);
- Solenoid.set(true);
- Intake2.stop();
- chassis.drive_distance(14.2);
- chassis.drive_distance(-5);
- chassis.drive_distance(6); 
- wait(1.5,sec);
-
-
- //Scoring
- chassis.drive_distance(-30.2);
+//Matchload #2
+Intake1.spin(fwd, 100, pct);
+Intake2.stop();
+Solenoid.set(true);
+chassis.drive_distance(31.4);
+chassis.drive_distance(-5);
+chassis.drive_distance(6.1); 
+wait(1.5,sec);
 
 
- Intake1.spin(reverse, 50, pct);
- wait(0.25, sec);
- Intake1.spin(fwd, 100, pct);
- Intake2.spin(fwd, 100, pct);
- wait(4.5,sec);
- Solenoid.set(false);
- Intake1.stop();
- Intake2.stop();
+//Scoring
+chassis.turn_to_angle(90);
+chassis.drive_distance(-31.25);
 
+
+Intake1.spin(reverse, 75, pct);
+wait(0.25, sec);
+Intake1.spin(fwd, 100, pct);
+Intake2.spin(fwd, 100, pct);
+wait(2.75,sec);
+Solenoid.set(false);
+Intake1.stop();
+Intake2.stop();
 
  //Parking
  chassis.drive_distance(12);
  chassis.turn_to_angle(0);
  chassis.drive_distance(48);
  chassis.turn_to_angle(-90);
- chassis.drive_distance(-43, 270, 12, 1);
+ chassis.set_drive_constants(6, 10, 0, 0, 0);
+ chassis.drive_distance(-20);
 
 }
 
